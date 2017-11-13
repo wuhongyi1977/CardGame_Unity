@@ -1,0 +1,2 @@
+def_ID,def_NAME,def_EXPLAIN,def_ILLUST,def_DEF1,def_DEF2,def_DEF3
+def1,IP_limitation,特定のIPアドレスからのアクセスを制限する。,ddd,100,200,300
