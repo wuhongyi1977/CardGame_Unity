@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 atk_ID,atk_NAME,atk_EXPLAIN,atk_ILLUST,atk_ATK1,atk_ATK2,atk_ATK3
 atk1,DoS,DosUŒ‚‚ğ‚·‚éB,aaa,300,,
+=======
+atk_ID,atk_NAME,atk_EXPLAIN,atk_ILLUST,atk_ATK
+atk1,DoS,DosUŒ‚‚ğ‚·‚éB,aaa,300
+>>>>>>> f7874e884c893532f6575225edd3502cd623ab0e
