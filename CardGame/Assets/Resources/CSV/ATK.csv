@@ -1,0 +1,9 @@
+ATK_ID,ATK_NAME,ATK_ATTRIBUTE,ATK_DESCRIPTION,ATK_POWER
+ATK-0001,Keyloggers,Confidentiality,,300
+ATK-0002,Tempest,Confidentiality,,300
+ATK-0003,SQL_Injection,Integrity,,300
+ATK-0004,MITM,Integrity,,300
+ATK-0005,DoS,Availability,,300
+ATK-0006,BOF,Availability,,300
+ATK-0007,Social Engineering,Overall,,300
+ATK-0008,Brute_Force,Overall,,300
