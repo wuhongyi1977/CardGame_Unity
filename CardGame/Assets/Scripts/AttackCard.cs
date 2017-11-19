@@ -4,31 +4,26 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class AttackCard : Card {
-
-    protected int atk1;
-    protected int atk2;
-    protected int atk3;
+public class AttackCard : Card
+{
+    protected int atk;
 
     //csv関連(using System & using System.IOも追加)
     private string csvFilePath="atk";
     private string[] csvDatas = new string[] {};
 
     public AttackCard(){
-        this.atk1 = 0;
-        this.atk2 = 0;
-        this.atk3 = 0;
+        this.atk = 0;
     }
 
-    public AttackCard(string name, string id, string explain, string illust, int atk1, int atk2, int atk3){
-        this.card_name = name;
+    public AttackCard(string id, string name, string attribute, string explain, int atk, string illust){
         this.card_id = id;
+        this.card_name = name;
+        this.card_attribute = attribute;
         this.card_explain = explain;
+        this.atk = atk;
         this.card_color = Color.red;
         this.card_illust = illust;
-        this.atk1 = atk1;
-        this.atk2 = atk2;
-        this.atk3 = atk3;
     }
 
     //IDに対応した数字からcsvを読み込むコンストラクタ
@@ -38,13 +33,12 @@ public class AttackCard : Card {
 
         this.card_id = csvDatas[0];
         this.card_name = csvDatas[1];
-        this.card_explain = csvDatas[2];
+        this.card_attribute = csvDatas[2];
+        this.card_explain = csvDatas[3];
+        this.atk = Convert.ToInt32(csvDatas[4]);
         this.card_color = Color.red;
-        this.card_illust = csvDatas[3];
-        this.atk1 = Convert.ToInt32(csvDatas[4]);
-        this.atk2 = Convert.ToInt32(csvDatas[5]);
-        this.atk3 = Convert.ToInt32(csvDatas[6]);
-
+        // 現時点でATK.csvに無いのでとりあえず5番目に
+        this.card_illust = csvDatas[5];
     }
 
 	// Use this for initialization

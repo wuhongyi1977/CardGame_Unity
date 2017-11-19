@@ -6,10 +6,7 @@ using UnityEngine;
 
 public class DefenseCard : Card
 {
-
-    protected int def1;
-    protected int def2;
-    protected int def3;
+    protected int def;
 
     //csv関連(using System & using System.IOも追加)
     private string csvFilePath = "def";
@@ -17,21 +14,18 @@ public class DefenseCard : Card
 
     public DefenseCard()
     {
-        this.def1 = 0;
-        this.def2 = 0;
-        this.def3 = 0;
+        this.def = 0;
     }
 
-    public DefenseCard(string name, string id, string explain, string illust, int def1, int def2, int def3)
+    public DefenseCard(string id, string name, string attribute, string explain, int def, string illust)
     {
-        this.card_name = name;
         this.card_id = id;
+        this.card_name = name;
+        this.card_attribute = attribute;
         this.card_explain = explain;
+        this.def = def;
         this.card_color = Color.blue;
         this.card_illust = illust;
-        this.def1 = def1;
-        this.def2 = def2;
-        this.def3 = def3;
     }
 
     //IDに対応した数字からcsvを読み込むコンストラクタ
@@ -42,13 +36,12 @@ public class DefenseCard : Card
 
         this.card_id = csvDatas[0];
         this.card_name = csvDatas[1];
-        this.card_explain = csvDatas[2];
+        this.card_attribute = csvDatas[2];
+        this.card_explain = csvDatas[3];
+        this.def = Convert.ToInt32(csvDatas[4]);
         this.card_color = Color.blue;
-        this.card_illust = csvDatas[3];
-        this.def1 = Convert.ToInt32(csvDatas[4]);
-        this.def2 = Convert.ToInt32(csvDatas[5]);
-        this.def3 = Convert.ToInt32(csvDatas[6]);
-
+        // 現時点でDEF.csvに無いのでとりあえず5番目に
+        this.card_illust = csvDatas[5];
     }
 
     // Use this for initialization
