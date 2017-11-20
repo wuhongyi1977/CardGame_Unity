@@ -5,5 +5,5 @@ ATK-0003,SQL_Injection,Integrity,,300
 ATK-0004,MITM,Integrity,,300
 ATK-0005,DoS,Availability,,300
 ATK-0006,BOF,Availability,,300
-ATK-0007,Social Engineering,Overall,,300
+ATK-0007,Social_Engineering,Overall,,300
 ATK-0008,Brute_Force,Overall,,300
