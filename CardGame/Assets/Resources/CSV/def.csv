@@ -1,9 +1,9 @@
 DEF_ID,DEF_NAME,DEF_ATTRIBUTE,DEF_DESCRIPTION,DEF_POWER
-DEF-0001,Key_encryption,Confidentiality,キーを暗号化することでキーロガーに平文をみられるリスクを無くす。,300
-DEF-0002,Electromagnetic_wave_shielding,Confidentiality,電子機器やケーブルを使用している部屋の壁を電磁波が通らない素材で作るなどして電磁波を傍受されないようにする。,300
-DEF-0003,Binding_mechanism,Integrity,あらかじめSQL文のひな型を用意し、後からプレースホルダに実際の値を当てはめてSQL文を生成する。SQL文のひな型と実際の入力値が別々で送られる為、不正なSQL文の実行を阻止できる。,300
-DEF-0004,Certificate_introduction,Integrity,セキュリティ証明書を発行することで正しい証明書を持つ相手にのみ通信を許可する。暗号化、電子署名、認証によって盗聴や改ざんを防ぐことができる。,300
-DEF-0005,IDS_Introduction,Availability,侵入検知システム。ネットワークを監視することで接続してくるパターンの傾向を見ることができる。あらかじめ用意された攻撃パターンと比較して一致した場合、自動的に回線を遮断する。,300
-DEF-0006,Coding_Standards,Availability,ソフトウェア開発において、プログラムのコーディングにあたってのルール。これによってバッファオーバーフローや無限ループなどの致命的なエラーなどが起こらないようにする。,300
-DEF-0007,Security_audit,Overall,セキュリティ対策が適切に整備、運用されているかを検証、評価する。例えば、使用された機密文書がそのままごみ箱に捨てられていたら、シュレッダーにかけて廃棄するように指摘する。,300
-DEF-0008,Enhanced_security,Overall,パスワードを英数字織り交ぜるなど複雑化して、他人が予想しにくいものにする。,300
+DEF-0001,Key_encryption,Confidentiality,,300
+DEF-0002,Electromagnetic_wave_shielding,Confidentiality,,300
+DEF-0003,Binding_mechanism,Integrity,,300
+DEF-0004,Certificate_introduction,Integrity,,300
+DEF-0005,IDS_Introduction,Availability,,300
+DEF-0006,Coding_Standards,Availability,,300
+DEF-0007,Security_audit,Overall,,300
+DEF-0008,Enhanced_security,Overall,,300

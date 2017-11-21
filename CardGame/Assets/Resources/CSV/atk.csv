@@ -1,9 +1,9 @@
 ATK_ID,ATK_NAME,ATK_ATTRIBUTE,ATK_DESCRIPTION,ATK_POWER
-ATK-0001,Keyloggers,Confidentiality,機密性を脅かす攻撃。キーボードの入力を監視し、記録するソフト。本来デバッグに使用する為のツールであったが、これを他人に対して悪用してパスワードなどを盗む事例がある。,300
-ATK-0002,Tempest,Confidentiality,機密性を脅かすサイドチャネル攻撃の一つ。電子機器やそれらをつなぐケーブルから発せられる微弱な電磁波をアンテナで傍受し、解析することで機密情報を盗み取る。,300
-ATK-0003,SQL_Injection,Integrity,完全性を脅かす攻撃。データベースを使用しているWebサイト等において、データを問い合わせる際に悪意のあるSQL文を送ることによってデータベースを改ざん及び不正入手しようとする。,300
-ATK-0004,MITM,Integrity,完全性を脅かす攻撃。通信中の二者の間に忍び込み、データを中継する形になる。これによって送られてきたデータを盗み見して、データを書き換えて送ることが出来てしまう。,300
-ATK-0005,DoS,Availability,可用性を脅かす攻撃。特定のネットワーク、コンピュータに接続要求を大量に送り付けて通信機能を停止させる。また、大量のコンピュータを操って同時にDoS攻撃をすることをDDoS攻撃という。,300
-ATK-0006,BOF,Availability,可用性を脅かす。一時的にデータを保存する場所となるバッファに負荷をかけることでオーバーフローさせる。バッファがオーバーフローすることで、CPUがデータを正しく扱いきれず、アプリケーションの挙動が不安定になる。,300
-ATK-0007,Social_Engineering,Overall,侵入した会社などでごみ箱から機密情報を見つけ出したり、社員に成りすましてパスワードを聞き出したりするなど、攻撃手法は多岐に渡る。物理的な手段を用いて情報を盗もうとする行為全般にあたる。,300
-ATK-0008,Brute_Force,Overall,考えられるパスワードのパターン全てを使って不正ログインをしようとする行為。設定されたパスワードが単純であるほど、攻撃されやすい。,300
+ATK-0001,Keyloggers,Confidentiality,,300
+ATK-0002,Tempest,Confidentiality,,300
+ATK-0003,SQL_Injection,Integrity,,300
+ATK-0004,MITM,Integrity,,300
+ATK-0005,DoS,Availability,,300
+ATK-0006,BOF,Availability,,300
+ATK-0007,Social_Engineering,Overall,,300
+ATK-0008,Brute_Force,Overall,,300
