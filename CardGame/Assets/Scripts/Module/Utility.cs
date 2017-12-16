@@ -27,6 +27,12 @@ public class Utility{
         GameObject.Destroy(obj);
     }
 
+    // Resourcesフォルダ内のテクスチャ読み込み.
+    public static Sprite GetSprite(string fileName, string spriteName) {
+        Sprite[] sprites = Resources.LoadAll<Sprite>(fileName);
+        return System.Array.Find<Sprite>(sprites, (sprite) => sprite.name.Equals(spriteName));
+    }
+
     // 2D用コンポーネントを使用していた時.
     // タップしたオブジェクトを取得する.
     public static bool findObject2DWithTag(Camera camera, Vector2 tapPos, string target) {
