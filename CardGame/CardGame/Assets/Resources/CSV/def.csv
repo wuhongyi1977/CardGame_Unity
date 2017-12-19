@@ -1,0 +1,9 @@
+DEF_ID,DEF_NAME,DEF_ATTRIBUTE,DEF_DESCRIPTION,DEF_POWER
+DEF-0001,Key_encryption,Confidentiality,,300
+DEF-0002,Electromagnetic_wave_shielding,Confidentiality,,300
+DEF-0003,Binding_mechanism,Integrity,,300
+DEF-0004,Certificate_introduction,Integrity,,300
+DEF-0005,IDS_Introduction,Availability,,300
+DEF-0006,Coding_Standards,Availability,,300
+DEF-0007,Security_audit,Overall,,300
+DEF-0008,Enhanced_security,Overall,,300
