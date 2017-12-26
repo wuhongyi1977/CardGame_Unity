@@ -24,6 +24,7 @@ public class CsvReader{
         }
 
         string line = reader.ReadLine();
+
         string[] csvDatas = line.Split(',');
 
         return csvDatas;

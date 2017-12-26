@@ -44,11 +44,11 @@ TagManager:
   - name: BackGround
     uniqueID: 3685256413
     locked: 0
+  - name: Field
+    uniqueID: 4068899817
+    locked: 0
   - name: Card
     uniqueID: 1471595899
-    locked: 0
-  - name: Player
-    uniqueID: 4068899817
     locked: 0
   - name: UI
     uniqueID: 334273531

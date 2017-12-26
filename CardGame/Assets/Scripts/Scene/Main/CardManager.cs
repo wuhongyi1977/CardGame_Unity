@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,8 +18,13 @@ public class CardManager : MonoBehaviour {
     //    setActive(false);
     //}
 
+    // Use this for initialization
+    void Start() {
+        createCard();
+    }
+
     //カード生成
-    public void createTarget() {
+    public void createCard() {
         if (isCreated) return;
         cards = null;
 
@@ -34,10 +40,17 @@ public class CardManager : MonoBehaviour {
                 //名前変更
                 cards[i].transform.name = "card"+i;
 
-                //裏表の設定もする
-
-                //スプライト変更(裏表の値による,ifうんたらかんたら)
-
+                //変数設定(CSV読み込んでカードの値設定)
+                Card card = cards[i].GetComponent<Card>();
+                CsvReader csv = new CsvReader();
+                string[] data = csv.Readcsv("deck", i+1);
+                //書いて(裏表の設定もする)
+                card.ID = Convert.ToInt32(data[0]);
+                card.NAME = data[1];
+                card.ATTRIBUTE = data[2];
+                card.DESCRIBE = data[3];
+                card.POWER = Convert.ToInt32(data[4]);
+                card.TYPE = data[5];
 
                 //座標指定(デッキの位置に)
                 float x = 0;
@@ -45,7 +58,8 @@ public class CardManager : MonoBehaviour {
                 cards[i].transform.localPosition = new Vector3(x,y,0);
 
                 //親設定
-                cards[i].transform.parent = transform;
+                cards[i].transform.parent = null;
+                cards[i].transform.parent = transform.FindChild("Deck").gameObject.transform;
 
             }
             isCreated = true;
@@ -63,19 +77,10 @@ public class CardManager : MonoBehaviour {
     }
 
     // 表示 / 非表示の設定.
-    public void setActive(bool flag) {
-        foreach (Transform child in transform)
-            child.gameObject.SetActive(flag);
-    }
-
-    // スプライトの変更.(スプライトの格納名は後でいれてください)
-    void changeSprite(int index) {
-        string name = "" + index;
-        // Resourcesフォルダ内のファイル名, スプライト名.
-        Sprite sp = Utility.GetSprite("", name);
-        SpriteRenderer sr = Utility.GetSafeComponent<SpriteRenderer>(cards[index]);
-        sr.sprite = sp;
-    }
+    //public void setActive(bool flag) {
+    //    foreach (Transform child in transform)
+    //        child.gameObject.SetActive(flag);
+    //}
 
 
 }
