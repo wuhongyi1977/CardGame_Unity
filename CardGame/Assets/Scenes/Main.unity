@@ -193,6 +193,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1146495175}
+  - component: {fileID: 1146495176}
   m_Layer: 0
   m_Name: Hand
   m_TagString: Untagged
@@ -213,6 +214,17 @@ Transform:
   m_Father: {fileID: 1752830537}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1146495176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1146495174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 650afc76ac6e0324992086b6617d53b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1184057337
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,6 +233,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1184057338}
+  - component: {fileID: 1184057339}
   m_Layer: 0
   m_Name: Deck
   m_TagString: Untagged
@@ -241,6 +254,17 @@ Transform:
   m_Father: {fileID: 1752830537}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1184057339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1184057337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fe499a46950d2143a29644e0688e6ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1219102768
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,7 +435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 174d8153dd3b8cd4bb953e5c11280491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseObject: {fileID: 1276577157339520, guid: db0c93ae8893224488d42064c434d25a, type: 2}
+  baseObject: {fileID: 1403885036071880, guid: 167ada71d1620b848aca9513b77fbbc8, type: 2}
   autoGenerate: 1
   cards: []
 --- !u!1 &1782329957
