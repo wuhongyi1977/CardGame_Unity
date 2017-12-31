@@ -56,11 +56,23 @@ public class CardManager : MonoBehaviour {
                 float x = 0;
                 float y = 0;
                 cards[i].transform.localPosition = new Vector3(x,y,0);
+            }
 
+            //カードのシャッフル
+            System.Random rng = new System.Random();
+            int n = cards.Length;
+            while (n > 1) {
+                n--;
+                int k = rng.Next(n + 1);
+                GameObject tmp = cards[k];
+                cards[k] = cards[n];
+                cards[n] = tmp;
+            }
+
+            for (int i = 0; i < cards.Length; i++) {
                 //親設定
                 cards[i].transform.parent = null;
                 cards[i].transform.parent = transform.FindChild("Deck").gameObject.transform;
-
             }
             isCreated = true;
         }

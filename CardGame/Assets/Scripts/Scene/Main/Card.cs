@@ -25,17 +25,15 @@ public class Card : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        //スプライト変更(裏表の値による,ifうんたらかんたら)
+        //スプライト変更
         if (isBack) {
             //裏の時
-
+            changeSprite("Sprites", "card_back");
+            changeChildSprite("Sprites","none");
         } else {
-            //表の時
-
-        }
-
-        if (Utility.getOperationUp()) {
-            //Debug.Log(card_name);
+            //表の時(暫定・属性とかに合わせてで変わる予定です)
+            changeSprite("Sprites","ATK");
+            changeChildSprite("Sprites","card_picture");
         }
     }
 
@@ -85,5 +83,14 @@ public class Card : MonoBehaviour {
         Sprite sp = Utility.GetSprite(fileName, spriteName);
         SpriteRenderer sr = GetComponent<SpriteRenderer>();
         sr.sprite = sp;
+    }
+
+    //子のスプライト変更
+    void changeChildSprite(string fileName, string spriteName) {
+        // Resourcesフォルダ内のファイル名, スプライト名.
+        Sprite sp = Utility.GetSprite(fileName, spriteName);
+        GameObject child = transform.FindChild("card_picture").gameObject;
+        SpriteRenderer child_sr = child.GetComponent<SpriteRenderer>();
+        child_sr.sprite = sp;
     }
 }
