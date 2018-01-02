@@ -44,7 +44,7 @@ public class CardManager : MonoBehaviour {
                 Card card = cards[i].GetComponent<Card>();
                 CsvReader csv = new CsvReader();
                 string[] data = csv.Readcsv("deck", i+1);
-                //書いて(裏表の設定もする)
+
                 card.ID = Convert.ToInt32(data[0]);
                 card.NAME = data[1];
                 card.ATTRIBUTE = data[2];
