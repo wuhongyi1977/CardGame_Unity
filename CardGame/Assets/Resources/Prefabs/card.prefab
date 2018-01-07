@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 212144167107716538}
   m_Layer: 0
   m_Name: card_picture
-  m_TagString: Untagged
+  m_TagString: card_picture
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 114276125026199452}
   m_Layer: 0
   m_Name: card
-  m_TagString: Untagged
+  m_TagString: card
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

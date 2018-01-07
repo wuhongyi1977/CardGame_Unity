@@ -25,17 +25,18 @@ public class Card : MonoBehaviour {
     private SpriteRenderer sr_child;
 
 
-    // Use this for initialization
-    void Start() {
+	// Use this for initialization
+	void Start ()
+    {
         isBack = true;
         isSelect = true;
 
         sp_back = Utility.GetSprite("Sprites", "card_back");
         if (card_type == "ATK") {
             //後でAttribute分岐も
-            sp_face = Utility.GetSprite("Sprites", "ATK");
+            sp_face = Utility.GetSprite("Sprites","ATK");
 
-        } else if (card_type == "DEF") {
+        }else if(card_type == "DEF") {
             //後でAttribute分岐も
             sp_face = Utility.GetSprite("Sprites", "DEF");
 
@@ -52,9 +53,10 @@ public class Card : MonoBehaviour {
         sr.sprite = sp_back;
         sr_child.sprite = null;
     }
-
-    // Update is called once per frame
-    void Update() {
+	
+	// Update is called once per frame
+	void Update ()
+    {
         //スプライト変更
         if (isBack) {
             //裏の時
@@ -69,7 +71,7 @@ public class Card : MonoBehaviour {
 
     public int ID {
         set { card_id = value; }
-        get { return card_id; }
+        get { return card_id;  }
     }
 
     public string NAME {

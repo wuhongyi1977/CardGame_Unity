@@ -10,14 +10,14 @@ public class FieldSet : MonoBehaviour {
     GameObject[] children;  //本来フィールドにはカード一枚だけど一応
 
     // Use this for initialization
-    void Start() {
+    void Start () {
         count = transform.childCount;
     }
-
-    // Update is called once per frame
-    void Update() {
+	
+	// Update is called once per frame
+	void Update () {
         setCards();
-    }
+	}
 
     //フィールド内のカードを正しい位置に移動(以前とカード枚数が違ったら)
     public void setCards() {

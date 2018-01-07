@@ -18,39 +18,39 @@ public class Player : MonoBehaviour {
     //カード置くとこも宣言,これでFieldクラスはいらない？イベントカードだけ置き場未定(プレイヤーの中央？)
     private List<string> Field;
     private List<string> SPField;
-
+    
 
     public bool isPlayable;
 
     //詳しいコンストラクタは未定義ですごめん
-    public Player() { }
+   public  Player() {}
 
-    // Use this for initialization
-    void Start() {
-
-    }
-
-    // Update is called once per frame
-    void Update() {
-
-    }
+	// Use this for initialization
+	void Start () {
+		
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		
+	}
 
     //select card:hand(string) from Hand(List<string>)
-    public string HandSelect() {
-        string hand = "";
+    public string HandSelect(){
+        string hand= "";
         //選べるカードをここでハイライトした方がよさそう
         //それ用にどのカード種類が選べるかを判別する方法はどうしよう？int引数を設定してターン毎にゲームマネージャーで引数いれてコール？
-        for (int i = 0; i < Hand.Count; i++) {
-
+        for(int i = 0; i < Hand.Count; i++) {
+            
         }
 
-        if (playerID != 0) {
+        if (playerID != 0){
             //プレイヤーが操作してカード選ぶ
 
 
-        } else {
+        }else {
             //CPUならランダム
-
+            
         }
 
 
@@ -58,9 +58,9 @@ public class Player : MonoBehaviour {
     }
 
     //draw card:hand(string) from Deck(List<string>)
-    public string Draw() {
+    public string Draw(){
 
-        string hand = Deck[1];
+        string hand=Deck[1];
         Deck.RemoveAt(0);
 
         return hand;
@@ -68,7 +68,7 @@ public class Player : MonoBehaviour {
 
     //send card:hand(string) to Tomb(List<string>)
     public string Discard() {
-        string hand = "";
+        string hand="";
 
 
         return hand;

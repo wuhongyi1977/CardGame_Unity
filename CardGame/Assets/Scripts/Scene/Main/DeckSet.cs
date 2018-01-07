@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DeckSet : MonoBehaviour {
-
+    
     //メンバ変数
     int a = 0;
     int count;
     GameObject[] children;
 
     // Use this for initialization
-    void Start() {
+    void Start () {
         count = transform.childCount;
-    }
-
-    // Update is called once per frame
-    void Update() {
+	}
+	
+	// Update is called once per frame
+	void Update () {
         setCards();
 
         a++;
@@ -23,7 +23,7 @@ public class DeckSet : MonoBehaviour {
             draw();
             a = 0;
         }
-    }
+	}
 
     //デッキ内のカードを正しい位置に移動(以前とカード枚数が違ったら)
     public void setCards() {
@@ -40,14 +40,22 @@ public class DeckSet : MonoBehaviour {
 
     //手札を引く・カードを一枚手札に送る(山札にカードがなかったらスルー)
     public void draw() {
-        if (transform.childCount == 0) {
-            return;
+        if(transform.childCount == 0) {
+            return ;
         }
         GameObject child = transform.GetChild(0).gameObject;
         child.transform.parent = null;
         child.transform.parent = transform.parent.FindChild("Hand").gameObject.transform;
-        child.AddComponent<Tap>();
         Debug.Log(child.name);
+    }
+
+    //手札を５枚引く(ゲーム開始時に使う)
+    public void draw5() {
+        for (int i = 0; i < 5; i++) {
+            GameObject child = transform.GetChild(0).gameObject;
+            child.transform.parent = null;
+            child.transform.parent = transform.parent.FindChild("Hand").gameObject.transform;
+        }
     }
 
 }

@@ -9,12 +9,12 @@ public class TombSet : MonoBehaviour {
     GameObject[] children;
 
     // Use this for initialization
-    void Start() {
+    void Start () {
         count = transform.childCount;
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update () {
         setCards();
     }
 
