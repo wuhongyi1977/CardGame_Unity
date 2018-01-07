@@ -7,7 +7,7 @@ public class CardManager : MonoBehaviour {
 
     //カードのベースとなるオブジェクト
     public GameObject baseObject;
-    //自動でカードを生成するかどうか
+    //自動でカードを生成するかどうか(いらない？)
     public bool autoGenerate;
     //カードの配列
     [SerializeField]
