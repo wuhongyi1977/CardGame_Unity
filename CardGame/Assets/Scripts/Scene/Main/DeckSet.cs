@@ -49,4 +49,13 @@ public class DeckSet : MonoBehaviour {
         Debug.Log(child.name);
     }
 
+    //手札を５枚引く(ゲーム開始時に使う)
+    public void draw5() {
+        for (int i = 0; i < 5; i++) {
+            GameObject child = transform.GetChild(0).gameObject;
+            child.transform.parent = null;
+            child.transform.parent = transform.parent.FindChild("Hand").gameObject.transform;
+        }
+    }
+
 }

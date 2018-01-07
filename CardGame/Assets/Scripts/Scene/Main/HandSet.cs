@@ -36,14 +36,14 @@ public class HandSet : MonoBehaviour {
             if (count%2 == 0) {  //偶数の時の挙動
                 for(int i = 0; count > i; i++) {
                     children[i] = transform.GetChild(i).gameObject;
-                    double x = -0.75 - 1.5 * (count/2 - 1) + 1.5 * i;
+                    double x = -0.75 - 1.6 * (count/2 - 1) + 1.6 * i;
                     children[i].transform.localPosition = new Vector3((float)x, -5, 0);
                     children[i].GetComponent<Card>().ISBACK = false;  //とりあえず表に
                 }
             } else {  //奇数
                 for (int i = 0; count > i; i++) {
                     children[i] = transform.GetChild(i).gameObject;
-                    double x = -1.5 * ((count - 1)/2) + 1.5 * i;
+                    double x = -1.6 * ((count - 1)/2) + 1.6 * i;
                     children[i].transform.localPosition = new Vector3((float)x, -5, 0);
                     children[i].GetComponent<Card>().ISBACK = false;  //とりあえず表に
                 }
@@ -62,6 +62,8 @@ public class HandSet : MonoBehaviour {
 
 
     //イベポジに出す関数(GameObject引数？イベポジが詳細未定なので未作成)
+    public void event_summon (GameObject card) {
 
+    }
 
 }
