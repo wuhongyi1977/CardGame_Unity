@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Utility{
+public class Utility {
 
     private static Vector2 tempVector2 = Vector2.zero;
     private static Vector3 tempVector3 = Vector3.zero;
 
     //Resourceからファイル読み込み
-    public static GameObject ResourceLoad( string path) {
+    public static GameObject ResourceLoad(string path) {
         return (GameObject)Resources.Load(path);
     }
 
@@ -19,7 +19,7 @@ public class Utility{
 
     //GameObject生成
     public static GameObject Instantiate(GameObject baseObj) {
-        return GameObject.Instantiate(baseObj,Vector3.zero,Quaternion.identity) as GameObject;
+        return GameObject.Instantiate(baseObj, Vector3.zero, Quaternion.identity) as GameObject;
     }
 
     // 破棄.

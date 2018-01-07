@@ -6,8 +6,8 @@ public class SetAspect : MonoBehaviour {
 
     //これをカードとかゲームオブジェクトにアタッチしてアスペクト補正をする
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start() {
         //Resizeを取得
         GameObject Resize = GameObject.Find("/Resize");
         //Risizeから変更スケールを取得
@@ -26,9 +26,9 @@ public class SetAspect : MonoBehaviour {
         transform.position = new Vector3(pos.x, pos.y, tz);
 
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+
+    // Update is called once per frame
+    void Update() {
+
+    }
 }

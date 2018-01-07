@@ -5,20 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class MoveScene : MonoBehaviour {
 
-    public void moveScene()
-    {
+    public void moveScene() {
         // シーン遷移のテスト。
-        if (transform.name.Equals("bt_title"))
-        {
+        if (transform.name.Equals("bt_title")) {
             SceneManager.LoadScene("Main");
-        } else if (transform.name.Equals("bt_main"))
-        {
+        } else if (transform.name.Equals("bt_main")) {
             SceneManager.LoadScene("Result");
-        } else if (transform.name.Equals("bt_result"))
-        {
+        } else if (transform.name.Equals("bt_result")) {
             SceneManager.LoadScene("Title");
-        } else
-        {
+        } else {
             Debug.Log("This isn't a button for moving between scenes.");
         }
     }

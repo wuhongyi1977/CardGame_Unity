@@ -7,7 +7,7 @@ public class AspectResize : MonoBehaviour {
     public float hei;
     public float wid;
 
-	public Vector3 Resized() {
+    public Vector3 Resized() {
         //スクリーンのサイズの比率を求める
         float ratio = (float)Screen.width / (float)Screen.height;
         //比率に合わせて横幅を調整（ベース画像の比率が16:10）

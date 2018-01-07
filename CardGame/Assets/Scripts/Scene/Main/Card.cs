@@ -12,34 +12,64 @@ public class Card : MonoBehaviour {
     private string card_describe;
     private int card_power;
     private string card_type;
-    private bool isBack;  //裏表
+    private bool isBack;  //裏表(trueで裏)
     private bool isSelect;  //その時選べるかどうか(ゲームから変更する？)
 
-	// Use this for initialization
-	void Start ()
-    {
+    //スプライト一覧(update内で毎回スプライト生成すると負荷がやばいのでメンバ変数に・startで値代入とレンダラに適用)
+    private Sprite sp_back;
+    private Sprite sp_face;
+    private Sprite sp_child;
+
+    //レンダラ一覧
+    private SpriteRenderer sr;
+    private SpriteRenderer sr_child;
+
+
+    // Use this for initialization
+    void Start() {
         isBack = true;
-        isSelect = true;        
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
+        isSelect = true;
+
+        sp_back = Utility.GetSprite("Sprites", "card_back");
+        if (card_type == "ATK") {
+            //後でAttribute分岐も
+            sp_face = Utility.GetSprite("Sprites", "ATK");
+
+        } else if (card_type == "DEF") {
+            //後でAttribute分岐も
+            sp_face = Utility.GetSprite("Sprites", "DEF");
+
+        } else if (card_type == "EV") {
+            sp_face = Utility.GetSprite("Sprites", "EV");
+        } else if (card_type == "SP") {
+            sp_face = Utility.GetSprite("Sprites", "SP");
+        }
+        sp_child = Utility.GetSprite("Sprites", "card_picture");
+
+        sr = GetComponent<SpriteRenderer>();
+        sr_child = transform.FindChild("card_picture").gameObject.GetComponent<SpriteRenderer>();
+
+        sr.sprite = sp_back;
+        sr_child.sprite = null;
+    }
+
+    // Update is called once per frame
+    void Update() {
         //スプライト変更
         if (isBack) {
             //裏の時
-            changeSprite("Sprites", "card_back");
-            changeChildSprite("Sprites","none");
+            sr.sprite = sp_back;
+            sr_child.sprite = null;
         } else {
-            //表の時(暫定・属性とかに合わせてで変わる予定です)
-            changeSprite("Sprites","ATK");
-            changeChildSprite("Sprites","card_picture");
+            //表の時
+            sr.sprite = sp_face;
+            sr_child.sprite = sp_child;
         }
     }
 
     public int ID {
         set { card_id = value; }
-        get { return card_id;  }
+        get { return card_id; }
     }
 
     public string NAME {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class CsvReader{
+public class CsvReader {
 
     //メンバ変数はどれが事前に必要なのか不明なのでTextAssetだけにしました
     //変数と関数は必要そうなら順次増やしてってください
@@ -13,13 +13,11 @@ public class CsvReader{
 
     public CsvReader() { }
 
-    public string[] Readcsv(string csvFilePath ,int num)
-    {
+    public string[] Readcsv(string csvFilePath, int num) {
         csvFile = Resources.Load("CSV/" + csvFilePath) as TextAsset;
         StringReader reader = new StringReader(csvFile.text);
 
-        for (int i = 0; i < num; i++)
-        {
+        for (int i = 0; i < num; i++) {
             reader.ReadLine();
         }
 
