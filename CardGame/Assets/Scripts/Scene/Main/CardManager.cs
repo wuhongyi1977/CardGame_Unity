@@ -7,7 +7,7 @@ public class CardManager : MonoBehaviour {
 
     //カードのベースとなるオブジェクト
     public GameObject baseObject;
-    //自動でカードを生成するかどうか
+    //自動でカードを生成するかどうか(いらない？)
     public bool autoGenerate;
     //カードの配列
     [SerializeField]
@@ -44,7 +44,7 @@ public class CardManager : MonoBehaviour {
                 Card card = cards[i].GetComponent<Card>();
                 CsvReader csv = new CsvReader();
                 string[] data = csv.Readcsv("deck", i+1);
-                //書いて(裏表の設定もする)
+
                 card.ID = Convert.ToInt32(data[0]);
                 card.NAME = data[1];
                 card.ATTRIBUTE = data[2];

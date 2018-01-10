@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour {
     private int turn;
     private GameObject[] players;
     private TurnManager tm;
+    private GameObject deck;
+    private GameObject field;
+    private GameObject tomb;
 
 	// Use this for initialization
 	void Start () {
@@ -45,6 +48,9 @@ public class GameManager : MonoBehaviour {
         players = new GameObject[2];
         players[0] = transform.FindChild("Player").gameObject;
         players[1] = transform.FindChild("Enemy").gameObject;
+        deck = players[turn].transform.FindChild("Cards/Deck").gameObject;
+        field = players[turn].transform.FindChild("Cards/Field").gameObject;
+        tomb = players[turn].transform.FindChild("Cards/Tomb").gameObject;
         tm = new TurnManager(turn);
         StartCoroutine(GameLoop());
 	}
@@ -60,8 +66,6 @@ public class GameManager : MonoBehaviour {
         yield return StartCoroutine(RoundCalcDamage());
         // 墓地行き判定
         yield return StartCoroutine(RoundTomb());
-        // ターン切り替え
-        yield return StartCoroutine(RoundTurnChange());
 
         if (isFinished())
         {
@@ -69,6 +73,13 @@ public class GameManager : MonoBehaviour {
             SceneManager.LoadScene("Result");
         } else
         {
+            // ターン切り替え
+            yield return StartCoroutine(RoundTurnChange());
+
+            deck = players[turn].transform.FindChild("Cards/Deck").gameObject;
+            field = players[turn].transform.FindChild("Cards/Field").gameObject;
+            tomb = players[turn].transform.FindChild("Cards/Tomb").gameObject;
+
             // ゲーム終了判定がされなければ、コルーチンGameLoopをリスタートする
             // 現時点で行っているGameLoopは終了する
             StartCoroutine(GameLoop());
@@ -77,8 +88,9 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator RoundDraw()
     {
-        GameObject deck = players[turn].transform.FindChild("Cards/Deck").gameObject;
         // デッキ(山札)から1枚カードを引く
+        //Utility.GetSafeComponent<DeckSet>(deck).draw();
+        // 手札からフィールドに出せるカードが1枚も無い場合、スキップ
         yield return null;
     }
 
@@ -91,6 +103,7 @@ public class GameManager : MonoBehaviour {
     private IEnumerator RoundCalcDamage()
     {
         // 攻撃側なら攻撃したとき、守備側なら攻撃されたときのダメージを計算する
+        // ダメージ＝攻撃力―防御力＊防御力ダウン率＊クリティカル防御率
         yield return null;
     }
 
@@ -98,6 +111,10 @@ public class GameManager : MonoBehaviour {
     {
         // HPが0になったカードを墓地に送る
         // フィールドにいるカード(攻撃、防御、イベント)が、墓地に行く可能性有
+        /* if (FieldのカードのHP == 0) {
+         *     field.parent = tomb;
+         * }
+         */
         yield return null;
     }
 
@@ -110,6 +127,10 @@ public class GameManager : MonoBehaviour {
     // 1試合が終わったかどうかを判定する
     bool isFinished()
     {
+        /* if (3枚のシールドのどこかから情報を抜き取られたら) {
+         *     return true;
+         * }
+         */
         return false;
     }
 }
