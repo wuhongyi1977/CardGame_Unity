@@ -5,9 +5,12 @@ using UnityEngine;
 public class DeckSet : MonoBehaviour {
     
     //メンバ変数
-    int a = 0;
     int count;
     GameObject[] children;
+
+    //試しドロー用
+    int a = 0;
+    int b = 0;
 
     // Use this for initialization
     void Start () {
@@ -19,10 +22,12 @@ public class DeckSet : MonoBehaviour {
         setCards();
 
         a++;
-        if (a > 60) {
+        if (a > 5 && b<20) {
             draw();
             a = 0;
+            b++;
         }
+        
 	}
 
     //デッキ内のカードを正しい位置に移動(以前とカード枚数が違ったら)
