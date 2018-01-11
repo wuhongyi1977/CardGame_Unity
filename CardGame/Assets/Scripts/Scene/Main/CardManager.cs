@@ -52,10 +52,6 @@ public class CardManager : MonoBehaviour {
                 card.POWER = Convert.ToInt32(data[4]);
                 card.TYPE = data[5];
 
-                //座標指定(デッキの位置に)
-                float x = 0;
-                float y = 0;
-                cards[i].transform.localPosition = new Vector3(x,y,0);
             }
 
             //カードのシャッフル
