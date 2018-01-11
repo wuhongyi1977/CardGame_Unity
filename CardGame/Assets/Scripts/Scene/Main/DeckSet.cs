@@ -5,12 +5,9 @@ using UnityEngine;
 public class DeckSet : MonoBehaviour {
     
     //メンバ変数
+    int a = 0;
     int count;
     GameObject[] children;
-
-    //試しドロー用
-    int a = 0;
-    int b = 0;
 
     // Use this for initialization
     void Start () {
@@ -22,12 +19,10 @@ public class DeckSet : MonoBehaviour {
         setCards();
 
         a++;
-        if (a > 5 && b<20) {
+        if (a > 60) {
             draw();
             a = 0;
-            b++;
         }
-        
 	}
 
     //デッキ内のカードを正しい位置に移動(以前とカード枚数が違ったら)
@@ -36,7 +31,7 @@ public class DeckSet : MonoBehaviour {
         if (count != Childcount) {
             count = Childcount;
             children = new GameObject[count];
-            for (int i = 0; count > i; i++) {
+            for (int i = 0; i < count; i++) {
                 children[i] = transform.GetChild(i).gameObject;
                 children[i].transform.localPosition = new Vector3(3, (float)-2.5, 0);
             }
@@ -45,12 +40,12 @@ public class DeckSet : MonoBehaviour {
 
     //手札を引く・カードを一枚手札に送る(山札にカードがなかったらスルー)
     public void draw() {
-        if(transform.childCount == 0) {
+        if (transform.childCount == 0) {
             return ;
         }
         GameObject child = transform.GetChild(0).gameObject;
         child.transform.parent = null;
-        child.transform.parent = transform.parent.FindChild("Hand").gameObject.transform;
+        child.transform.parent = transform.parent.Find("Hand").gameObject.transform;
         Debug.Log(child.name);
     }
 
@@ -59,7 +54,7 @@ public class DeckSet : MonoBehaviour {
         for (int i = 0; i < 5; i++) {
             GameObject child = transform.GetChild(0).gameObject;
             child.transform.parent = null;
-            child.transform.parent = transform.parent.FindChild("Hand").gameObject.transform;
+            child.transform.parent = transform.parent.Find("Hand").gameObject.transform;
         }
     }
 

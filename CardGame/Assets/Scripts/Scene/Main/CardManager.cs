@@ -52,6 +52,10 @@ public class CardManager : MonoBehaviour {
                 card.POWER = Convert.ToInt32(data[4]);
                 card.TYPE = data[5];
 
+                //座標指定(デッキの位置に)
+                float x = 0;
+                float y = 0;
+                cards[i].transform.localPosition = new Vector3(x,y,0);
             }
 
             //カードのシャッフル
@@ -68,7 +72,7 @@ public class CardManager : MonoBehaviour {
             for (int i = 0; i < cards.Length; i++) {
                 //親設定
                 cards[i].transform.parent = null;
-                cards[i].transform.parent = transform.FindChild("Deck").gameObject.transform;
+                cards[i].transform.parent = transform.Find("Deck").gameObject.transform;
             }
             isCreated = true;
         }
