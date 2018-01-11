@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-// RequireComponent: これをGameObjectにアタッチしたとき、必要なコンポーネントが自動的にそのGameObjectに加えられる。
-[RequireComponent(typeof(Rigidbody))]
 public class Tap : MonoBehaviour, IPointerClickHandler {
-
+    /*
+     * カードのプレハブにTapをアタッチ
+     * 
+     * タップできるやつ：isselectがtrueのとき
+     * 長押ししたら説明が出る：isbackがfalseのとき
+     */
+    
     // Use this for initialization
     void Start() {
 
@@ -18,6 +22,8 @@ public class Tap : MonoBehaviour, IPointerClickHandler {
     }
 
     public void OnPointerClick(PointerEventData eventData) {
-        Debug.Log("tapされたで");
+        // もしタップしたカードのisSelectがtrueなら
+        Variables.Player_tapped_obj = eventData.selectedObject;
+        Debug.Log("タップされたやつ: " + this.name);
     }
 }

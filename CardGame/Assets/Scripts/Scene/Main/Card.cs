@@ -48,7 +48,7 @@ public class Card : MonoBehaviour {
         sp_child = Utility.GetSprite("Sprites", "card_picture");
 
         sr = GetComponent<SpriteRenderer>();
-        sr_child = transform.FindChild("card_picture").gameObject.GetComponent<SpriteRenderer>();
+        sr_child = transform.Find("card_picture").gameObject.GetComponent<SpriteRenderer>();
 
         sr.sprite = sp_back;
         sr_child.sprite = null;
@@ -121,7 +121,7 @@ public class Card : MonoBehaviour {
     void changeChildSprite(string fileName, string spriteName) {
         // Resourcesフォルダ内のファイル名, スプライト名.
         Sprite sp = Utility.GetSprite(fileName, spriteName);
-        GameObject child = transform.FindChild("card_picture").gameObject;
+        GameObject child = transform.Find("card_picture").gameObject;
         SpriteRenderer child_sr = child.GetComponent<SpriteRenderer>();
         child_sr.sprite = sp;
     }

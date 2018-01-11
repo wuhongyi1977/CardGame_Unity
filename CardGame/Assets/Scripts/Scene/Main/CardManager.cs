@@ -72,7 +72,7 @@ public class CardManager : MonoBehaviour {
             for (int i = 0; i < cards.Length; i++) {
                 //親設定
                 cards[i].transform.parent = null;
-                cards[i].transform.parent = transform.FindChild("Deck").gameObject.transform;
+                cards[i].transform.parent = transform.Find("Deck").gameObject.transform;
             }
             isCreated = true;
         }

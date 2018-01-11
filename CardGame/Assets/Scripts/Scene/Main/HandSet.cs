@@ -34,14 +34,14 @@ public class HandSet : MonoBehaviour {
             Current = Center;  //いる？
 
             if (count%2 == 0) {  //偶数の時の挙動
-                for(int i = 0; count > i; i++) {
+                for(int i = 0; i < count; i++) {
                     children[i] = transform.GetChild(i).gameObject;
                     double x = -0.75 - 1.6 * (count/2 - 1) + 1.6 * i;
                     children[i].transform.localPosition = new Vector3((float)x, -5, 0);
                     children[i].GetComponent<Card>().ISBACK = false;  //とりあえず表に
                 }
             } else {  //奇数
-                for (int i = 0; count > i; i++) {
+                for (int i = 0; i < count; i++) {
                     children[i] = transform.GetChild(i).gameObject;
                     double x = -1.6 * ((count - 1)/2) + 1.6 * i;
                     children[i].transform.localPosition = new Vector3((float)x, -5, 0);
@@ -57,7 +57,7 @@ public class HandSet : MonoBehaviour {
     //フィールドに出す関数(GameObject引数？)
     public void summon (GameObject card) {
         card.transform.parent = null;
-        card.transform.parent = transform.parent.FindChild("Field").gameObject.transform;
+        card.transform.parent = transform.parent.Find("Field").gameObject.transform;
     }
 
 
