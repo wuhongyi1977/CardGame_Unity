@@ -82,6 +82,7 @@ public class ShieldManager : MonoBehaviour {
                 shields[i].transform.parent = this.transform;
             }
         }
+        isCreated = true;
 
     }
 }
