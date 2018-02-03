@@ -23,7 +23,7 @@ public class Tap : MonoBehaviour, IPointerClickHandler {
 
     public void OnPointerClick(PointerEventData eventData) {
         // もしタップしたカードのisSelectがtrueなら
-        Variables.Player_tapped_obj = eventData.selectedObject;
+        Variables.player_tapped_obj = eventData.selectedObject;
         Debug.Log("タップされたやつ: " + this.name);
     }
 }

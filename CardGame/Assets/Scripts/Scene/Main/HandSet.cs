@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class HandSet : MonoBehaviour {
 
     //メンバ変数
+    string player_name;
     int count;
     GameObject[] children;
 
@@ -14,6 +15,8 @@ public class HandSet : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        // "Player"か"Enemy"が入る。これを用いてsetCards()などの処理を分岐させると楽かも
+        player_name = transform.parent.parent.name;
         count = transform.childCount;
         children = new GameObject[20];
         sld = GameObject.Find("Player_Slider").GetComponent<Slider>();
@@ -52,7 +55,6 @@ public class HandSet : MonoBehaviour {
                 children[i].transform.localPosition = new Vector3((float)x, -5, 0);
                 children[i].GetComponent<Card>().ISBACK = false;  //とりあえず表に
             }
-
         }
     }
 
@@ -76,7 +78,7 @@ public class HandSet : MonoBehaviour {
     //フィールドに出す関数(GameObject引数？)
     public void summon (GameObject card) {
         card.transform.parent = null;
-        card.transform.parent = transform.parent.FindChild("Field").gameObject.transform;
+        card.transform.parent = transform.parent.Find("Field").gameObject.transform;
     }
 
 

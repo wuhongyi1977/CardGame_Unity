@@ -14,18 +14,19 @@ public class CardManager : MonoBehaviour {
     private GameObject[] cards;
     private bool isCreated;
 
-    //void Awake() {
-    //    setActive(false);
-    //}
-
     // Use this for initialization
-    void Start() {
+    void Awake() {
         createCard();
+    }
+
+    void Start() {
+
     }
 
     //カード生成
     public void createCard() {
-        if (isCreated) return;
+        if (isCreated)
+            return;
         cards = null;
 
         if (cards == null) {
@@ -33,17 +34,17 @@ public class CardManager : MonoBehaviour {
             cards = new GameObject[20];
 
             //生成
-            for( int i = 0;i< cards.Length; i++){
+            for (int i = 0; i < cards.Length; i++) {
                 //baseObjectから生成
                 cards[i] = Utility.Instantiate(baseObject);
 
                 //名前変更
-                cards[i].transform.name = "card"+(i+1);
+                cards[i].transform.name = "card" + (i + 1);
 
                 //変数設定(CSV読み込んでカードの値設定)
                 Card card = cards[i].GetComponent<Card>();
                 CsvReader csv = new CsvReader();
-                string[] data = csv.Readcsv("deck", i+1);
+                string[] data = csv.Readcsv("deck", i + 1);
 
                 card.ID = Convert.ToInt32(data[0]);
                 card.NAME = data[1];
@@ -68,7 +69,7 @@ public class CardManager : MonoBehaviour {
             for (int i = 0; i < cards.Length; i++) {
                 //親設定
                 cards[i].transform.parent = null;
-                cards[i].transform.parent = transform.FindChild("Deck").gameObject.transform;
+                cards[i].transform.parent = transform.Find("Deck").gameObject.transform;
             }
             isCreated = true;
         }
