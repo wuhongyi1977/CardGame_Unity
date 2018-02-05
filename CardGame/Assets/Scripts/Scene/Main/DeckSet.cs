@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DeckSet : MonoBehaviour {
-
+    
     //メンバ変数
     string player_name;
     int count;
