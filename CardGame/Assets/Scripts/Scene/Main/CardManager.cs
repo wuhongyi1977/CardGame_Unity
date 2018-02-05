@@ -7,25 +7,26 @@ public class CardManager : MonoBehaviour {
 
     //カードのベースとなるオブジェクト
     public GameObject baseObject;
-    //自動でカードを生成するかどうか
+    //自動でカードを生成するかどうか(いらない？)
     public bool autoGenerate;
     //カードの配列
     [SerializeField]
     private GameObject[] cards;
     private bool isCreated;
 
-    //void Awake() {
-    //    setActive(false);
-    //}
-
     // Use this for initialization
-    void Start() {
+    void Awake() {
         createCard();
+    }
+
+    void Start() {
+
     }
 
     //カード生成
     public void createCard() {
-        if (isCreated) return;
+        if (isCreated)
+            return;
         cards = null;
 
         if (cards == null) {
@@ -33,18 +34,18 @@ public class CardManager : MonoBehaviour {
             cards = new GameObject[20];
 
             //生成
-            for( int i = 0;i< cards.Length; i++){
+            for (int i = 0; i < cards.Length; i++) {
                 //baseObjectから生成
                 cards[i] = Utility.Instantiate(baseObject);
 
                 //名前変更
-                cards[i].transform.name = "card"+(i+1);
+                cards[i].transform.name = "card" + (i + 1);
 
                 //変数設定(CSV読み込んでカードの値設定)
                 Card card = cards[i].GetComponent<Card>();
                 CsvReader csv = new CsvReader();
-                string[] data = csv.Readcsv("deck", i+1);
-                //書いて(裏表の設定もする)
+                string[] data = csv.Readcsv("deck", i + 1);
+
                 card.ID = Convert.ToInt32(data[0]);
                 card.NAME = data[1];
                 card.ATTRIBUTE = data[2];
@@ -52,10 +53,6 @@ public class CardManager : MonoBehaviour {
                 card.POWER = Convert.ToInt32(data[4]);
                 card.TYPE = data[5];
 
-                //座標指定(デッキの位置に)
-                float x = 0;
-                float y = 0;
-                cards[i].transform.localPosition = new Vector3(x,y,0);
             }
 
             //カードのシャッフル
@@ -72,7 +69,7 @@ public class CardManager : MonoBehaviour {
             for (int i = 0; i < cards.Length; i++) {
                 //親設定
                 cards[i].transform.parent = null;
-                cards[i].transform.parent = transform.FindChild("Deck").gameObject.transform;
+                cards[i].transform.parent = transform.Find("Deck").gameObject.transform;
             }
             isCreated = true;
         }

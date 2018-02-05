@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class Card : MonoBehaviour {
@@ -12,15 +13,57 @@ public class Card : MonoBehaviour {
     private string card_describe;
     private int card_power;
     private string card_type;
-    private bool isBack;  //裏表
-    private bool isSelect;  //その時選べるかどうか(ゲームから変更する？)
+    private bool isBack;  //裏表(trueで裏)
+    private bool isSelectable;  //その時選べるかどうか(ゲームから変更する？)
+
+    //スプライト一覧(update内で毎回スプライト生成すると負荷がやばいのでメンバ変数に・startで値代入とレンダラに適用)
+    private Sprite sp_back;
+    private Sprite sp_face;
+    private Sprite sp_child;
+
+    //レンダラ一覧
+    private SpriteRenderer sr;
+    private SpriteRenderer sr_child;
+
+    //テキスト一覧
+    private GameObject text_card_name;
+    private GameObject text_card_power;
+
 
 	// Use this for initialization
 	void Start ()
     {
         isBack = true;
-        isSelect = true;        
-	}
+        isSelectable = true;
+
+        sp_back = Utility.GetSprite("Sprites", "card_back");
+
+        if (card_type == "ATK") {
+            //後でAttribute分岐も
+            sp_face = Utility.GetSprite("Sprites","ATK");
+
+        } else if(card_type == "DEF") {
+            //後でAttribute分岐も
+            sp_face = Utility.GetSprite("Sprites", "DEF");
+
+        } else if (card_type == "EV") {
+            sp_face = Utility.GetSprite("Sprites", "EV");
+
+        } else if (card_type == "SP") {
+            sp_face = Utility.GetSprite("Sprites", "SP");
+        }
+
+        sp_child = Utility.GetSprite("Sprites", "card_picture");
+
+        sr = GetComponent<SpriteRenderer>();
+        sr_child = transform.Find("card_picture").gameObject.GetComponent<SpriteRenderer>();
+
+        sr.sprite = sp_back;
+        sr_child.sprite = null;
+
+        text_card_name = transform.Find("card_name").gameObject;
+        text_card_power = transform.Find("card_power").gameObject;
+    }
 	
 	// Update is called once per frame
 	void Update ()
@@ -28,13 +71,28 @@ public class Card : MonoBehaviour {
         //スプライト変更
         if (isBack) {
             //裏の時
-            changeSprite("Sprites", "card_back");
-            changeChildSprite("Sprites","none");
+            sr.sprite = sp_back;
+            sr_child.sprite = null;
         } else {
-            //表の時(暫定・属性とかに合わせてで変わる予定です)
-            changeSprite("Sprites","ATK");
-            changeChildSprite("Sprites","card_picture");
+            //表の時
+            sr.sprite = sp_face;
+            sr_child.sprite = sp_child;
         }
+
+        //きっちりカード生成後に初期化できるならいらない(特殊イベントはどうするか)
+        //if (text_card_name.GetComponent<TextMesh>().text.Equals(card_name)) {
+            text_card_name.GetComponent<TextMesh>().text = card_name;
+        //}
+        //if (text_card_power.GetComponent<TextMesh>().text.Equals(card_power.ToString())) {
+            text_card_power.GetComponent<TextMesh>().text = card_power.ToString();
+        //}
+
+        Vector3 currentPos = transform.localPosition;
+        float name_y = currentPos.y + (float)0.9;
+        float power_y = currentPos.y - (float)0.75;
+        text_card_name.transform.position= new Vector3(currentPos.x,name_y,currentPos.z);
+        text_card_power.transform.position = new Vector3(currentPos.x, power_y, currentPos.z);
+
     }
 
     public int ID {
@@ -72,9 +130,9 @@ public class Card : MonoBehaviour {
         get { return isBack; }
     }
 
-    public bool ISSELECT {
-        set { isSelect = value; }
-        get { return isSelect; }
+    public bool ISSELECTABLE {
+        set { isSelectable = value; }
+        get { return isSelectable; }
     }
 
     // スプライトの変更.(スプライトの格納名は後でいれてください)
@@ -89,8 +147,9 @@ public class Card : MonoBehaviour {
     void changeChildSprite(string fileName, string spriteName) {
         // Resourcesフォルダ内のファイル名, スプライト名.
         Sprite sp = Utility.GetSprite(fileName, spriteName);
-        GameObject child = transform.FindChild("card_picture").gameObject;
+        GameObject child = transform.Find("card_picture").gameObject;
         SpriteRenderer child_sr = child.GetComponent<SpriteRenderer>();
         child_sr.sprite = sp;
     }
+
 }
