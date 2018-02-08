@@ -14,7 +14,7 @@ public class Card : MonoBehaviour {
     private int card_power;
     private string card_type;
     private bool isBack;  //裏表(trueで裏)
-    private bool isSelect;  //その時選べるかどうか(ゲームから変更する？)
+    private bool isSelectable;  //その時選べるかどうか(ゲームから変更する？)
 
     //スプライト一覧(update内で毎回スプライト生成すると負荷がやばいのでメンバ変数に・startで値代入とレンダラに適用)
     private Sprite sp_back;
@@ -29,12 +29,11 @@ public class Card : MonoBehaviour {
     private GameObject text_card_name;
     private GameObject text_card_power;
 
-
 	// Use this for initialization
 	void Start ()
     {
         isBack = true;
-        isSelect = true;
+        isSelectable = true;
 
         sp_back = Utility.GetSprite("Sprites", "card_back");
 
@@ -56,13 +55,13 @@ public class Card : MonoBehaviour {
         sp_child = Utility.GetSprite("Sprites", "card_picture");
 
         sr = GetComponent<SpriteRenderer>();
-        sr_child = transform.FindChild("card_picture").gameObject.GetComponent<SpriteRenderer>();
+        sr_child = transform.Find("card_picture").gameObject.GetComponent<SpriteRenderer>();
 
         sr.sprite = sp_back;
         sr_child.sprite = null;
 
-        text_card_name = transform.FindChild("card_name").gameObject;
-        text_card_power = transform.FindChild("card_power").gameObject;
+        text_card_name = transform.Find("card_name").gameObject;
+        text_card_power = transform.Find("card_power").gameObject;
     }
 	
 	// Update is called once per frame
@@ -130,9 +129,9 @@ public class Card : MonoBehaviour {
         get { return isBack; }
     }
 
-    public bool ISSELECT {
-        set { isSelect = value; }
-        get { return isSelect; }
+    public bool ISSELECTABLE {
+        set { isSelectable = value; }
+        get { return isSelectable; }
     }
 
     // スプライトの変更.(スプライトの格納名は後でいれてください)
@@ -147,7 +146,7 @@ public class Card : MonoBehaviour {
     void changeChildSprite(string fileName, string spriteName) {
         // Resourcesフォルダ内のファイル名, スプライト名.
         Sprite sp = Utility.GetSprite(fileName, spriteName);
-        GameObject child = transform.FindChild("card_picture").gameObject;
+        GameObject child = transform.Find("card_picture").gameObject;
         SpriteRenderer child_sr = child.GetComponent<SpriteRenderer>();
         child_sr.sprite = sp;
     }

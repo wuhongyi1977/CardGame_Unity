@@ -27,7 +27,7 @@ public class TombSet : MonoBehaviour {
             for (int i = 0; count > i; i++) {
                 children[i] = transform.GetChild(i).gameObject;
                 children[i].transform.localPosition = new Vector3(-3, (float)-2.5, 0);
-                children[i].GetComponent<Card>().ISSELECT = false;  //選択不可に
+                children[i].GetComponent<Card>().ISSELECTABLE = false;  //選択不可に
             }
         }
     }

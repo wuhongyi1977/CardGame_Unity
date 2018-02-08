@@ -28,7 +28,7 @@ public class FieldSet : MonoBehaviour {
             for (int i = 0; count > i; i++) {
                 children[i] = transform.GetChild(i).gameObject;
                 children[i].transform.localPosition = new Vector3(0, (float)-1.15, 0);
-                children[i].GetComponent<Card>().ISSELECT = false;  //選択不可に
+                children[i].GetComponent<Card>().ISSELECTABLE = false;  //選択不可に
             }
         }
     }
@@ -40,7 +40,7 @@ public class FieldSet : MonoBehaviour {
         }
         GameObject child = transform.GetChild(0).gameObject;
         child.transform.parent = null;
-        child.transform.parent = transform.parent.FindChild("Tomb").gameObject.transform;
+        child.transform.parent = transform.parent.Find("Tomb").gameObject.transform;
         Debug.Log(child.name);
     }
 }

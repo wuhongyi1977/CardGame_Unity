@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Field : MonoBehaviour {
+public class ResultManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

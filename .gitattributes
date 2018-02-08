@@ -1,2 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+*.xml encoding=utf-8
+*.csv encoding=cp932
