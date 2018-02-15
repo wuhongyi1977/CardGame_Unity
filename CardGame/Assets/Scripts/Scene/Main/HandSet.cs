@@ -38,7 +38,7 @@ public class HandSet : MonoBehaviour {
     public void setCards() {
         children = new GameObject[count];
 
-        //スライダーのつまみをずらす必要あり？(ゲームマネージャー内で使用する時にはコメントアウト外してください)
+        //スライダーのつまみを中央に戻す必要あり？(ゲームマネージャー内で使用する時にはコメントアウト外してください)
         //sld.value = (float)0.5;
 
         if (count % 2 == 0) {  //偶数の時の挙動
@@ -47,6 +47,7 @@ public class HandSet : MonoBehaviour {
                 double x = -0.8 - 1.6 * (count / 2 - 1) + 1.6 * i;
                 children[i].transform.localPosition = new Vector3((float)x, -5, 0);
                 children[i].GetComponent<Card>().ISBACK = false;  //とりあえず表に
+                children[i].GetComponent<Card>().ISSELECTABLE = true;  //とりあえず選択可に(暫定なので後々消してゲームマネージャーでちゃんと管理してください)
             }
         } else {  //奇数
             for (int i = 0; count > i; i++) {
@@ -54,6 +55,7 @@ public class HandSet : MonoBehaviour {
                 double x = -1.6 * ((count - 1) / 2) + 1.6 * i;
                 children[i].transform.localPosition = new Vector3((float)x, -5, 0);
                 children[i].GetComponent<Card>().ISBACK = false;  //とりあえず表に
+                children[i].GetComponent<Card>().ISSELECTABLE = true;  //とりあえず選択可に(暫定なので後々消してゲームマネージャーでちゃんと管理してください)
             }
         }
     }
