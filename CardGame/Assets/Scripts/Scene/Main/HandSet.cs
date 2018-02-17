@@ -39,6 +39,7 @@ public class HandSet : MonoBehaviour {
         children = new GameObject[count];
 
         //スライダーのつまみを中央に戻す必要あり？(ゲームマネージャー内で使用する時にはコメントアウト外してください)
+
         //sld.value = (float)0.5;
 
         if (count % 2 == 0) {  //偶数の時の挙動
@@ -48,6 +49,7 @@ public class HandSet : MonoBehaviour {
                 children[i].transform.localPosition = new Vector3((float)x, -5, 0);
                 children[i].GetComponent<Card>().ISBACK = false;  //とりあえず表に
                 children[i].GetComponent<Card>().ISSELECTABLE = true;  //とりあえず選択可に(暫定なので後々消してゲームマネージャーでちゃんと管理してください)
+
             }
         } else {  //奇数
             for (int i = 0; count > i; i++) {

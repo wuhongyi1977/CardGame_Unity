@@ -24,14 +24,12 @@ public class DeckSet : MonoBehaviour {
 	void Update () {
         setCards();
 
-        
         a++;
         if (a > 5 && b<20) {
             draw();
             a = 0;
             b++;
         }
-        
 	}
 
     //デッキ内のカードを正しい位置に移動(以前とカード枚数が違ったら)

@@ -62,8 +62,6 @@ public class Card : MonoBehaviour {
 
         text_card_name = transform.Find("card_name").gameObject;
         text_card_power = transform.Find("card_power").gameObject;
-
-
     }
 	
 	// Update is called once per frame
