@@ -24,14 +24,12 @@ public class DeckSet : MonoBehaviour {
 	void Update () {
         setCards();
 
-        /*
         a++;
         if (a > 5 && b<20) {
             draw();
             a = 0;
             b++;
         }
-        */
 	}
 
     //デッキ内のカードを正しい位置に移動(以前とカード枚数が違ったら)
@@ -43,6 +41,8 @@ public class DeckSet : MonoBehaviour {
             for (int i = 0; count > i; i++) {
                 children[i] = transform.GetChild(i).gameObject;
                 children[i].transform.localPosition = new Vector3(3, (float)-2.5, 0);
+                children[i].GetComponent<Card>().ISBACK = true;  //デッキ内では裏
+                children[i].GetComponent<Card>().ISSELECTABLE = false;  //デッキ内では詳細表示不可
             }
         }
     }
