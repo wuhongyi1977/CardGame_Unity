@@ -151,4 +151,19 @@ public class Card : MonoBehaviour {
         child_sr.sprite = sp;
     }
 
+    //追加部分(特殊カード)
+    public void specialCard(){
+        
+    }
+    //追加部分(イベントカード)
+    public void eventCard(){
+        if (card_id == 17){
+
+        }else if (card_id == 18){
+
+        }else if (card_id == 19){
+
+        }
+    }
+
 }
