@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -48,11 +48,6 @@ public class Tap : MonoBehaviour, IPointerClickHandler , IPointerDownHandler , I
 
     //タップ関数
     public void OnPointerClick(PointerEventData eventData) {
-
-        // もしタップしたカードのisSelectがtrueなら
-        Variables.player_tapped_obj = eventData.selectedObject;
-        Debug.Log("タップされたやつ: " + this.name);
-=======
         if(Time.time < TappedTime) {
             if (GetComponent<Card>().ISSELECTABLE) {
                 Variables.player_tapped_obj = gameObject;
@@ -88,6 +83,5 @@ public class Tap : MonoBehaviour, IPointerClickHandler , IPointerDownHandler , I
         if (pressing) {
             pressing = false;
         }
-
     }
 }
