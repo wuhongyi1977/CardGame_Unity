@@ -29,7 +29,6 @@ public class Card : MonoBehaviour {
     private GameObject text_card_name;
     private GameObject text_card_power;
 
-
 	// Use this for initialization
 	void Start ()
     {

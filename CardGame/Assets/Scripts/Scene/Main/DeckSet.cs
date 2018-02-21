@@ -23,7 +23,6 @@ public class DeckSet : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         setCards();
-
         /*
         a++;
         if (a > 5 && b<20) {
@@ -43,6 +42,8 @@ public class DeckSet : MonoBehaviour {
             for (int i = 0; count > i; i++) {
                 children[i] = transform.GetChild(i).gameObject;
                 children[i].transform.localPosition = new Vector3(3, (float)-2.5, 0);
+                children[i].GetComponent<Card>().ISBACK = true;  //デッキ内では裏
+                children[i].GetComponent<Card>().ISSELECTABLE = false;  //デッキ内では詳細表示不可
             }
         }
     }
