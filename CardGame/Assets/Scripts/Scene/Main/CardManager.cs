@@ -52,6 +52,7 @@ public class CardManager : MonoBehaviour {
                 card.DESCRIBE = data[3];
                 card.POWER = Convert.ToInt32(data[4]);
                 card.TYPE = data[5];
+                card.PARENT = transform.parent.name;
 
             }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -56,10 +56,12 @@ public class Tap : MonoBehaviour, IPointerClickHandler , IPointerDownHandler , I
         }
     }
 
-    //ドラッグ・スワイプの関数(実機用にもう少し複雑にしてもよいかも)
+    //ドラッグ・スワイプの関数(実機用にもう少し複雑にしてもよいかも・プレイヤーのみ動作)
     public void OnDrag(PointerEventData eventData) {
-        //Debug.Log("ドラッグ中");
-        sld.value -= eventData.delta.x * 0.005f;
+        if (GetComponent<Card>().PARENT == "Player") {
+            //Debug.Log("ドラッグ中");
+            sld.value -= eventData.delta.x * 0.005f;
+        }
     }
 
     //タップ・長押し開始の関数

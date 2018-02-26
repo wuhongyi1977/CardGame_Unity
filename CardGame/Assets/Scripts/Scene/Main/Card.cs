@@ -13,6 +13,7 @@ public class Card : MonoBehaviour {
     private string card_describe;
     private int card_power;
     private string card_type;
+    private string card_parent;  //playerかenemy所属どちらか,CardManagerで値いれる
     private bool isBack;  //裏表(trueで裏)
     private bool isSelectable;  //その時選べるかどうか(ゲームから変更する？)
 
@@ -124,6 +125,11 @@ public class Card : MonoBehaviour {
         get { return card_type; }
     }
 
+    public string PARENT {
+        set { card_parent = value; }
+        get { return card_parent;  }
+    }
+
     public bool ISBACK {
         set { isBack = value; }
         get { return isBack; }
@@ -149,6 +155,21 @@ public class Card : MonoBehaviour {
         GameObject child = transform.Find("card_picture").gameObject;
         SpriteRenderer child_sr = child.GetComponent<SpriteRenderer>();
         child_sr.sprite = sp;
+    }
+
+    //追加部分(特殊カード)
+    public void specialCard(){
+        
+    }
+    //追加部分(イベントカード)
+    public void eventCard(){
+        if (card_id == 17){
+
+        }else if (card_id == 18){
+
+        }else if (card_id == 19){
+
+        }
     }
 
 }
