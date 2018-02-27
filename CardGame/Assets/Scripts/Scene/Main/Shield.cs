@@ -8,6 +8,7 @@ public class Shield : MonoBehaviour {
     [SerializeField]
     private string shield_attribute;
     private int shield_hp;
+    public string shield_parent;
 
     //スプライトとレンダラ
     private Sprite sp;
@@ -20,13 +21,25 @@ public class Shield : MonoBehaviour {
 	void Start () {
         if (shield_attribute == "C") {
             sp = Utility.GetSprite("Sprites","shield_C");
-            Text_hp = GameObject.Find("Player_shield_C").GetComponent<Text>();
+            if (shield_parent == "Player") {
+                Text_hp = GameObject.Find("Player_shield_C").GetComponent<Text>();
+            }else {
+                Text_hp = GameObject.Find("Enemy_shield_C").GetComponent<Text>();
+            }
         }else if(shield_attribute == "I") {
             sp = Utility.GetSprite("Sprites", "shield_I");
-            Text_hp = GameObject.Find("Player_shield_I").GetComponent<Text>();
+            if (shield_parent == "Player") {
+                Text_hp = GameObject.Find("Player_shield_I").GetComponent<Text>();
+            }else {
+                Text_hp = GameObject.Find("Enemy_shield_I").GetComponent<Text>();
+            }
         } else if(shield_attribute == "A") {
             sp = Utility.GetSprite("Sprites", "shield_A");
-            Text_hp = GameObject.Find("Player_shield_A").GetComponent<Text>();
+            if (shield_parent == "Player") {
+                Text_hp = GameObject.Find("Player_shield_A").GetComponent<Text>();
+            }else {
+                Text_hp = GameObject.Find("Enemy_shield_A").GetComponent<Text>();
+            }
         }
         sr = GetComponent<SpriteRenderer>();
         sr.sprite = sp;
@@ -53,5 +66,10 @@ public class Shield : MonoBehaviour {
     public int HP {
         set { shield_hp = value; }
         get { return shield_hp; }
+    }
+
+    public string PARENT {
+        set { shield_parent = value; }
+        get { return shield_parent; }
     }
 }
