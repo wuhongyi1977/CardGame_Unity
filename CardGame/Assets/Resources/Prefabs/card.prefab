@@ -282,6 +282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   card_id: 0
+  card_parent: 
 --- !u!114 &114222091522720070
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -35,17 +35,19 @@ public class DeckSet : MonoBehaviour {
 
     //デッキ内のカードを正しい位置に移動(以前とカード枚数が違ったら)
     public void setCards() {
-        int Childcount = transform.childCount;
-        if (count != Childcount) {
-            count = Childcount;
-            children = new GameObject[count];
-            for (int i = 0; count > i; i++) {
-                children[i] = transform.GetChild(i).gameObject;
+        count = transform.childCount;
+        children = new GameObject[count];
+        for (int i = 0; count > i; i++) {
+            children[i] = transform.GetChild(i).gameObject;
+            if (player_name == "Player") {
                 children[i].transform.localPosition = new Vector3(3, (float)-2.5, 0);
-                children[i].GetComponent<Card>().ISBACK = true;  //デッキ内では裏
-                children[i].GetComponent<Card>().ISSELECTABLE = false;  //デッキ内では詳細表示不可
+            } else {
+                children[i].transform.localPosition = new Vector3(-3, (float)2.5, 0);
             }
+            children[i].GetComponent<Card>().ISBACK = true;  //デッキ内では裏
+            children[i].GetComponent<Card>().ISSELECTABLE = false;  //デッキ内では詳細表示不可
         }
+
     }
 
     //手札を引く・カードを一枚手札に送る(山札にカードがなかったらスルー)

@@ -12,21 +12,25 @@ public class ShieldManager : MonoBehaviour {
     private bool isCreated;
 
     //hpの更新もここから
-    private Text Player_hp;
+    private Text hp;
 
     // Use this for initialization
     void Start () {
         CreateShield();
 
-        Player_hp = GameObject.Find("Player_hp").GetComponent<Text>();
-        Player_hp.text = (shields[0].GetComponent<Shield>().HP
+        if (transform.parent.name == "Player") {
+            hp = GameObject.Find("Player_hp").GetComponent<Text>();
+        }else {
+            hp = GameObject.Find("Enemy_hp").GetComponent<Text>();
+        }
+        hp.text = (shields[0].GetComponent<Shield>().HP
                         + shields[1].GetComponent<Shield>().HP
                         + shields[2].GetComponent<Shield>().HP).ToString();
     }
 	
 	// Update is called once per frame
 	void Update () {
-        Player_hp.text = (shields[0].GetComponent<Shield>().HP
+        hp.text = (shields[0].GetComponent<Shield>().HP
                         + shields[1].GetComponent<Shield>().HP
                         + shields[2].GetComponent<Shield>().HP).ToString();
     }
@@ -65,6 +69,7 @@ public class ShieldManager : MonoBehaviour {
                     shield.ATTRIBUTE = "A";
                 }
                 shield.HP = 1000;  //後でゲーム開始前の入力に合わせられるようにしたい
+                shield.PARENT = transform.parent.name;
 
                 //座標指定
                 float x = 0;
@@ -75,7 +80,12 @@ public class ShieldManager : MonoBehaviour {
                 } else if (i == 2) {
                     x = (float)1.25;
                 }
-                float y = (float)-3.25;
+                float y = 0;
+                if (transform.parent.name == "Player") {
+                    y = (float)-3.25;
+                }else {
+                    y = (float)3.25;
+                }
                 shields[i].transform.localPosition = new Vector3(x, y, 0);
 
                 //親指定

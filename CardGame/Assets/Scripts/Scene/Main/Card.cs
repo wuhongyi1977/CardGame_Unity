@@ -13,6 +13,7 @@ public class Card : MonoBehaviour {
     private string card_describe;
     private int card_power;
     private string card_type;
+    private string card_parent;  //playerかenemy所属どちらか,CardManagerで値いれる
     private bool isBack;  //裏表(trueで裏)
     private bool isSelectable;  //その時選べるかどうか(ゲームから変更する？)
 
@@ -122,6 +123,11 @@ public class Card : MonoBehaviour {
     public string TYPE {
         set { card_type = value; }
         get { return card_type; }
+    }
+
+    public string PARENT {
+        set { card_parent = value; }
+        get { return card_parent;  }
     }
 
     public bool ISBACK {

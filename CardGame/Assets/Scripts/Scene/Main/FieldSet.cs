@@ -5,12 +5,13 @@ using UnityEngine;
 public class FieldSet : MonoBehaviour {
 
     //メンバ変数
-    int a = 0;
+    string player_name;
     int count;
     GameObject[] children;  //本来フィールドにはカード一枚だけど一応
 
     // Use this for initialization
     void Start () {
+        player_name = transform.parent.parent.name;
         count = transform.childCount;
     }
 	
@@ -27,7 +28,11 @@ public class FieldSet : MonoBehaviour {
             children = new GameObject[count];
             for (int i = 0; count > i; i++) {
                 children[i] = transform.GetChild(i).gameObject;
-                children[i].transform.localPosition = new Vector3(0, (float)-1.15, 0);
+                if (player_name == "Player") {
+                    children[i].transform.localPosition = new Vector3(0, (float)-1.15, 0);
+                }else {
+                    children[i].transform.localPosition = new Vector3(0, (float)1.15, 0);
+                }
                 children[i].GetComponent<Card>().ISSELECTABLE = false;  //選択不可に
             }
         }
