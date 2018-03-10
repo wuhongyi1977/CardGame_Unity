@@ -5,6 +5,10 @@ using UnityEngine.SceneManagement;
 
 public static class Variables { // 外部変数(Tap.csで検知されたオブジェクトを保存する)
     public const int CARD_MAX = 20;
+    public const float DEFDOWN_CONFIDENTIALITY = 0.7f; // 機密性の防御ダウン率(30％ダウン)
+    public const float DEFDOWN_INTEGRITY = 0.7f; // 完全性の防御ダウン率(30％ダウン)
+    public const float DEFDOWN_AVAILABILITY = 0.7f; // 可用性の防御ダウン率(30％ダウン)
+    public const float DEFDOWN_OVERALL = 0.9f; // 3属性全体の防御ダウン率(10％ダウン)
     public static GameObject player_tapped_obj = null; // プレイヤーがタップしたカードを保存する
     public static GameObject player_longtapped_obj = null; // プレイヤーが長押ししたカードを保存する(敵がフィールドに出したカードも含まれる)
     public static GameObject enemy_selected_obj = null; // 敵が選んだカードを保存する
@@ -83,13 +87,13 @@ public class GameManager : MonoBehaviour {
     private IEnumerator GameLoop() {
         Debug.Log("今のターンは、" + tm.Turn);
 
-        // 攻撃側と防御側双方がドローする
+        // 攻撃側と防御側双方が、それぞれの山札から手札にカードを加える
         yield return StartCoroutine(RoundDraw());
-        // 攻撃側が特殊カードorイベントカードを出す
+        // 攻撃側が手札から特殊カードorイベントカードを出す
         yield return StartCoroutine(RoundSpEvent());
-        // 攻撃側が攻撃カードをフィールドに出す
+        // 攻撃側が手札から攻撃カードをフィールドに出す
         yield return StartCoroutine(RoundAttack());
-        // 防御側が防御カードをフィールドに出す
+        // 防御側が手札から防御カードをフィールドに出す
         yield return StartCoroutine(RoundDefense());
         // ダメージを計算・反映させる
         if (!Variables.attacker_hasSkipped) {
@@ -112,6 +116,8 @@ public class GameManager : MonoBehaviour {
     }
 
     private IEnumerator RoundDraw() {
+        Debug.Log("Now is RoundDraw.");
+
         if (turn_total == 1) {
             // 最初のターンなら、双方とも自分のデッキ(山札)から5枚カードを引いて手札に加える
             Utility.GetSafeComponent<DeckSet>(attacker_deck).draw5();
@@ -121,44 +127,50 @@ public class GameManager : MonoBehaviour {
             Utility.GetSafeComponent<DeckSet>(attacker_deck).draw();
             Utility.GetSafeComponent<DeckSet>(defender_deck).draw();
         }
-        yield return new WaitForSeconds(1.0f); // 1秒待つ
+        yield return null;
     }
 
     private IEnumerator RoundSpEvent() {
-        // 防御側のカード全てを選べないようにする
-        change_isSelectable(defender_hand, 0);
+        Debug.Log("Now is RoundSpEvent.");
 
-        // 攻撃側の手札で、特殊カードとイベントカード以外のカードを選べなくする
+        // 攻撃側の手札で、特殊カードとイベントカードを選べるようにし、それ以外を選べないようにする
         change_isSelectable(attacker_hand, 1);
 
-        // 攻撃側が特殊カードorイベントカードを出せるかどうかのチェック
+        // 攻撃側が手札から特殊カードorイベントカードを出せるかどうかのチェック
         check_canSummon(attacker_hand, 1);
 
         // 攻撃側がここでスキップしたらこのコルーチンを停止する
         if (Variables.attacker_hasSkipped) {
+            Variables.attacker_hasSkipped = false; // 攻撃側で勝手にスキップ判定されるのを防ぐ
             yield break;
         }
 
+        yield return new WaitForSeconds(1.0f); // 1秒待つ
+
         // 手札からタップしたカードをフィールドに出す
-        // yield return new WaitUntil(): ()内の再開条件で指定した関数がtrueを返すまで処理を中断する(() => ...は、引数無しのラムダ式)
         if (tmp_attacker_name.Equals("Player")) {
+            // 敵(防御)側のカード(手札以外も)を全て選べないようにする
+            change_isSelectable(defender_hand, 0);
+            // yield return new WaitUntil(): ()内の再開条件で指定した関数がtrueを返すまで処理を中断する(() => ...は、引数無しのラムダ式)
             yield return new WaitUntil(() => Variables.player_tapped_obj != null);
+            Debug.Log("correctly selected.");
         } else if (tmp_attacker_name.Equals("Enemy")) {
-            yield return new WaitUntil(() => Variables.enemy_selected_obj != null);
+            Utility.GetSafeComponent<HandSet>(attacker_hand).random_summon();
+            Debug.Log("Enemy has selected SP or EV card.");
+            yield return new WaitForSeconds(1.0f); // 1秒待つ
         }
         summon_to_field(attacker_hand, 1);
-        
-        yield return new WaitForSeconds(1.0f); // 1秒待つ
+
+        yield return null;
     }
 
     private IEnumerator RoundAttack() {
-        // 防御側のカード全てを選べないようにする
-        change_isSelectable(defender_hand, 0);
+        Debug.Log("Now is RoundAttack.");
 
-        // 攻撃側の攻撃カード以外を選べないようにする
+        // 攻撃側の手札で、攻撃カードを選べるようにし、それ以外を選べないようにする
         change_isSelectable(attacker_hand, 2);
 
-        // 攻撃側がカードを出せるかどうかのチェック
+        // 攻撃側が手札からカードを出せるかどうかのチェック
         check_canSummon(attacker_hand, 2);
 
         // 攻撃側がここでスキップしたらこのコルーチンを停止する
@@ -166,49 +178,62 @@ public class GameManager : MonoBehaviour {
             yield break;
         }
 
+        yield return new WaitForSeconds(1.0f); // 1秒待つ
+
         // 手札からタップしたカードをフィールドに出す
-        // yield return new WaitUntil(): ()内の再開条件で指定した関数がtrueを返すまで処理を中断する(() => ...は、引数無しのラムダ式)
         if (tmp_attacker_name.Equals("Player")) {
+            // 敵(防御)側のカード(手札以外も)を全て選べないようにする
+            change_isSelectable(defender_hand, 0);
+            // yield return new WaitUntil(): ()内の再開条件で指定した関数がtrueを返すまで処理を中断する(() => ...は、引数無しのラムダ式)
             yield return new WaitUntil(() => Variables.player_tapped_obj != null);
+            Debug.Log("correctly selected.");
         } else if (tmp_attacker_name.Equals("Enemy")) {
-            yield return new WaitUntil(() => Variables.enemy_selected_obj != null);
+            Utility.GetSafeComponent<HandSet>(attacker_hand).random_summon();
+            Debug.Log("Enemy has selected ATK card.");
+            yield return new WaitForSeconds(1.0f); // 1秒待つ
         }
         summon_to_field(attacker_hand, 2);
 
-        yield return new WaitForSeconds(1.0f); // 1秒待つ
+        yield return null;
     }
 
     private IEnumerator RoundDefense() {
+        Debug.Log("Now is RoundDefense.");
+
         // 攻撃側(Player or Enemy)がスキップしていたら、防御側が手札を出すフェーズをスキップさせる
         if (Variables.attacker_hasSkipped) {
+            Variables.attacker_hasSkipped = false; // 次のターンの攻撃側が勝手にスキップされるのを防ぐ
             yield break;
         }
 
-        ///*
-
-        // 攻撃側のカード全てを選べないようにする
-        change_isSelectable(attacker_hand, 0);
-
-        // 防御側の防御カード以外を選べないようにする
+        // 防御側の手札で、防御カードを選べるようにし、それ以外を選べないようにする
         change_isSelectable(defender_hand, 3);
 
-        // 防御側がカードを出せるかどうかのチェック
+        // 防御側が手札からカードを出せるかどうかのチェック
         check_canSummon(defender_hand, 3);
 
+        yield return new WaitForSeconds(1.0f); // 1秒待つ
+
         // 手札からタップしたカードをフィールドに出す
-        // yield return new WaitUntil(): ()内の再開条件で指定した関数がtrueを返すまで処理を中断する(() => ...は、引数無しのラムダ式)
-        if (tmp_attacker_name.Equals("Player")) {
-            yield return new WaitUntil(() => Variables.enemy_selected_obj != null);
-        } else if (tmp_attacker_name.Equals("Enemy")) {
+        if (tmp_attacker_name.Equals("Enemy")) { // プレイヤーが防御側のとき
+            // プレイヤー(攻撃)側のカード(手札以外も)を全て選べないようにする
+            change_isSelectable(attacker_hand, 0);
+            // yield return new WaitUntil(): ()内の再開条件で指定した関数がtrueを返すまで処理を中断する(() => ...は、引数無しのラムダ式)
             yield return new WaitUntil(() => Variables.player_tapped_obj != null);
+            Debug.Log("correctly selected.");
+        } else if (tmp_attacker_name.Equals("Player")) { // 敵が防御側のとき
+            Utility.GetSafeComponent<HandSet>(defender_hand).random_summon();
+            Debug.Log("Enemy has selected DEF card.");
+            yield return new WaitForSeconds(1.0f); // 1秒待つ
         }
         summon_to_field(defender_hand, 3);
 
-        //*/
-        yield return new WaitForSeconds(1.0f); // 1秒待つ
+        yield return null;
     }
 
     private IEnumerator RoundCalcDamage() {
+        Debug.Log("Now is RoundCalcDamage.");
+
         // 攻撃側なら攻撃したとき、防御側なら攻撃されたときのダメージを計算する
         // 防御側の防御カードの属性＝攻撃側のカードの属性なら、防御クリティカル発生
         // ダメージ＝攻撃力―防御力＊防御力ダウン率＊クリティカル防御率
@@ -230,28 +255,34 @@ public class GameManager : MonoBehaviour {
 
         // 実際のダメージ計算。プレイヤーと敵が持つ3属性の攻撃力・防御力はどこで保持する・・・？
         // Variables.damage = atk_power - (int)(def_power * Variables.def_down * Variables.def_critical);
-        yield return new WaitForSeconds(1.0f); // 1秒待つ
+        yield return null;
     }
 
     private IEnumerator RoundTomb() {
+        Debug.Log("Now is RoundTomb.");
         // 特殊・イベントカードを含めた、フィールドに出ているカードを、ターン交代直前に墓地に移動させる
         // HPが0になったシールドは、そのまま残しておく
 
+        yield return new WaitForSeconds(1.0f); // 1秒待つ
+
         if (attacker_field.transform.childCount > 0) {
-            // 攻撃側と防御側のフィールド双方に
             GameObject attacker_field_child = attacker_field.transform.GetChild(0).gameObject;
             attacker_field_child.transform.parent = attacker_tomb.transform;
         }
+
+        yield return new WaitForSeconds(1.0f); // 1秒待つ
+
         if (defender_field.transform.childCount > 0) {
             GameObject defender_field_child = defender_field.transform.GetChild(0).gameObject;
             defender_field_child.transform.parent = defender_tomb.transform;
         }
         // イベントエリア内のカード移動は、HandSet.csのメソッドevent_summonの実装ができてから。
 
-        yield return new WaitForSeconds(1.0f); // 1秒待つ
+        yield return null;
     }
 
     private IEnumerator RoundTurnChange() {
+        Debug.Log("Now is RoundTurnChange.");
         tm.changeTurn();
         turn_total++;
         tmp_attacker_name = players[tm.Turn].name;
@@ -264,8 +295,7 @@ public class GameManager : MonoBehaviour {
         defender_hand = players[tm.getNextTurn()].transform.Find("Cards/Hand").gameObject;
         defender_field = players[tm.getNextTurn()].transform.Find("Cards/Field").gameObject;
         defender_tomb = players[tm.getNextTurn()].transform.Find("Cards/Tomb").gameObject;
-        Debug.Log(tmp_attacker_name);
-        yield return new WaitForSeconds(1.0f); // 1秒待つ
+        yield return null;
     }
 
     // モードごとに、攻撃側or防御側のカードを選べないようにする
@@ -277,27 +307,33 @@ public class GameManager : MonoBehaviour {
                     hand_child_card.ISSELECTABLE = false;
                 }
                 break;
-            case 1: // 特殊カードとイベントカード以外をfalse
+            case 1: // 特殊カードとイベントカードをtrue、それ以外をfalseにする
                 foreach (Transform hand_child in hand.transform) {
                     Card hand_child_card = Utility.GetSafeComponent<Card>(hand_child.gameObject);
                     if (!hand_child_card.TYPE.Equals("EV") && !hand_child_card.TYPE.Equals("SP")) {
                         hand_child_card.ISSELECTABLE = false;
+                    } else {
+                        hand_child_card.ISSELECTABLE = true;
                     }
                 }
                 break;
-            case 2: // 攻撃カード以外をfalse
+            case 2: // 攻撃カードをtrue、それ以外をfalseにする
                 foreach (Transform hand_child in hand.transform) {
                     Card hand_child_card = Utility.GetSafeComponent<Card>(hand_child.gameObject);
                     if (!hand_child_card.TYPE.Equals("ATK")) {
                         hand_child_card.ISSELECTABLE = false;
+                    } else {
+                        hand_child_card.ISSELECTABLE = true;
                     }
                 }
                 break;
-            case 3: // 防御カード以外をfalse
+            case 3: // 防御カードをtrue、それ以外をfalseにする
                 foreach (Transform hand_child in hand.transform) {
                     Card hand_child_card = Utility.GetSafeComponent<Card>(hand_child.gameObject);
                     if (!hand_child_card.TYPE.Equals("DEF")) {
                         hand_child_card.ISSELECTABLE = false;
+                    } else {
+                        hand_child_card.ISSELECTABLE = true;
                     }
                 }
                 break;
@@ -314,13 +350,14 @@ public class GameManager : MonoBehaviour {
                     Card hand_child_card = Utility.GetSafeComponent<Card>(hand_child.gameObject);
                     if (hand_child_card.TYPE.Equals("EV") || hand_child_card.TYPE.Equals("SP")) {
                         Variables.attacker_canSummon = true;
+                        break;
                     }
                 }
                 break;
             case 2: // 攻撃フェーズで攻撃側がカードを出せるかどうか
                 foreach (Transform hand_child in hand.transform) {
                     Card hand_child_card = Utility.GetSafeComponent<Card>(hand_child.gameObject);
-                    if (!hand_child_card.TYPE.Equals("ATK")) {
+                    if (hand_child_card.TYPE.Equals("ATK")) {
                         Variables.attacker_canSummon = true;
                     }
                 }
@@ -328,7 +365,7 @@ public class GameManager : MonoBehaviour {
             case 3: // 防御フェーズで防御側がカードを出せるかどうか
                 foreach (Transform hand_child in hand.transform) {
                     Card hand_child_card = Utility.GetSafeComponent<Card>(hand_child.gameObject);
-                    if (!hand_child_card.TYPE.Equals("DEF")) {
+                    if (hand_child_card.TYPE.Equals("DEF")) {
                         Variables.defender_canSummon = true;
                     }
                 }
@@ -366,18 +403,12 @@ public class GameManager : MonoBehaviour {
                 break;
             case 2: // RoundAttackのフェーズで、攻撃側がカードを出す
                 if (tmp_attacker_name.Equals("Player")) {
-                    string player_tapped_cardtype = Utility.GetSafeComponent<Card>(Variables.player_tapped_obj).TYPE;
-                    if (player_tapped_cardtype.Equals("ATK")) {
-                        Utility.GetSafeComponent<HandSet>(attacker_hand).summon(Variables.player_tapped_obj);
-                    }
+                    Utility.GetSafeComponent<HandSet>(attacker_hand).summon(Variables.player_tapped_obj);
                     // 操作系の変数の中身をリセット
                     Variables.player_tapped_obj = null;
                     Variables.player_isSkippable = false;
                 } else if (tmp_attacker_name.Equals("Enemy")) {
-                    string enemy_selected_cardtype = Utility.GetSafeComponent<Card>(Variables.enemy_selected_obj).TYPE;
-                    if (enemy_selected_cardtype.Equals("ATK")) {
-                        Utility.GetSafeComponent<HandSet>(attacker_hand).summon(Variables.enemy_selected_obj);
-                    }
+                    Utility.GetSafeComponent<HandSet>(attacker_hand).summon(Variables.enemy_selected_obj);
                     // 操作系の変数の中身をリセット
                     Variables.enemy_selected_obj = null;
                 }
@@ -385,22 +416,18 @@ public class GameManager : MonoBehaviour {
                 break;
             case 3: // RoundDefenseのフェーズで、防御側がカードを出す
                 if (tmp_attacker_name.Equals("Player")) {
-                    string enemy_selected_cardtype = Utility.GetSafeComponent<Card>(Variables.enemy_selected_obj).TYPE;
-                    if (enemy_selected_cardtype.Equals("DEF")) {
-                        Utility.GetSafeComponent<HandSet>(defender_hand).summon(Variables.enemy_selected_obj);
-                    }
+                    Utility.GetSafeComponent<HandSet>(defender_hand).summon(Variables.enemy_selected_obj);
                     // 操作系の変数の中身をリセット
                     Variables.enemy_selected_obj = null;
                 } else if (tmp_attacker_name.Equals("Enemy")) {
-                    string player_tapped_cardtype = Utility.GetSafeComponent<Card>(Variables.player_tapped_obj).TYPE;
-                    if (player_tapped_cardtype.Equals("DEF")) {
-                        Utility.GetSafeComponent<HandSet>(defender_hand).summon(Variables.player_tapped_obj);
-                    }
+                    Utility.GetSafeComponent<HandSet>(defender_hand).summon(Variables.player_tapped_obj);
                     // 操作系の変数の中身をリセット
                     Variables.player_tapped_obj = null;
                     Variables.player_isSkippable = false;
                 }
                 Variables.defender_canSummon = false;
+                break;
+            default:
                 break;
         }
     }
