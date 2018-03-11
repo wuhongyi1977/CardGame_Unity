@@ -15,7 +15,7 @@ public class ShieldManager : MonoBehaviour {
     private Text hp;
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
         CreateShield();
 
         if (transform.parent.name == "Player") {
@@ -33,6 +33,11 @@ public class ShieldManager : MonoBehaviour {
         hp.text = (shields[0].GetComponent<Shield>().HP
                         + shields[1].GetComponent<Shield>().HP
                         + shields[2].GetComponent<Shield>().HP).ToString();
+    }
+
+    public GameObject[] SHIELDS {
+        // GameManagerでのゲーム終了判定で、シールドの総HPを計算するためのアクセサ
+        get { return shields; }
     }
 
     //シールド生成

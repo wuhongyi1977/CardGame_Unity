@@ -5,10 +5,6 @@ using UnityEngine.SceneManagement;
 
 public static class Variables { // 外部変数(Tap.csで検知されたオブジェクトを保存する)
     public const int CARD_MAX = 20;
-    public const float DEFDOWN_CONFIDENTIALITY = 0.7f; // 機密性の防御ダウン率(30％ダウン)
-    public const float DEFDOWN_INTEGRITY = 0.7f; // 完全性の防御ダウン率(30％ダウン)
-    public const float DEFDOWN_AVAILABILITY = 0.7f; // 可用性の防御ダウン率(30％ダウン)
-    public const float DEFDOWN_OVERALL = 0.9f; // 3属性全体の防御ダウン率(10％ダウン)
     public static GameObject player_tapped_obj = null; // プレイヤーがタップしたカードを保存する
     public static GameObject player_longtapped_obj = null; // プレイヤーが長押ししたカードを保存する(敵がフィールドに出したカードも含まれる)
     public static GameObject enemy_selected_obj = null; // 敵が選んだカードを保存する
@@ -17,7 +13,11 @@ public static class Variables { // 外部変数(Tap.csで検知されたオブ�
     public static bool attacker_hasSkipped = false; // 攻撃側がスキップをしたかどうか
     public static bool defender_hasSkipped = false; // 防御側がスキップをしたかどうか
     public static bool player_isSkippable = false; // プレイヤーがスキップできる状態かどうか(使わないかも)
-    public static float def_critical = 1.2f; // クリティカル防御率(防御ダウン率は各カード保有させる？)
+    public static float defdown_C = 1.0f; // 機密性の防御ダウン率(30％)
+    public static float defdown_I = 1.0f; // 完全性の防御ダウン率(30％)
+    public static float defdown_A = 1.0f; // 可用性の防御ダウン率(30％)
+    public static float defdown_O = 1.0f; // 3属性全体の防御ダウン率(10％)
+    public static float def_critical = 1.0f; // クリティカル防御率(防御ダウン率は各カード保有させる？)
     public static int damage = 0; // ダメージ
 }
 
@@ -62,7 +62,17 @@ public class GameManager : MonoBehaviour {
     GameObject defender_hand;
     GameObject defender_field;
     GameObject defender_tomb;
+    Card field_atk_card;
+    Card field_def_card;
+    int field_atk_power;
+    int field_def_power;
+    string field_atk_attr;
+    string field_def_attr;
     string tmp_attacker_name;
+    GameObject[] defender_shields;
+    GameObject defender_shield_C;
+    GameObject defender_shield_I;
+    GameObject defender_shield_A;
 
     // Use this for initialization
     void Start() {
@@ -80,6 +90,16 @@ public class GameManager : MonoBehaviour {
         defender_field = players[tm.getNextTurn()].transform.Find("Cards/Field").gameObject;
         defender_tomb = players[tm.getNextTurn()].transform.Find("Cards/Tomb").gameObject;
         tmp_attacker_name = players[tm.Turn].name; // "Player"か"Enemy"が入る
+        defender_shields = Utility.GetSafeComponent<ShieldManager>(transform.Find(tmp_attacker_name + "/Shields").gameObject).SHIELDS;
+        foreach (GameObject shield in defender_shields) {
+            if (Utility.GetSafeComponent<Shield>(shield).ATTRIBUTE.Equals("C")) {
+                defender_shield_C = shield;
+            } else if (Utility.GetSafeComponent<Shield>(shield).ATTRIBUTE.Equals("I")) {
+                defender_shield_I = shield;
+            } else if (Utility.GetSafeComponent<Shield>(shield).ATTRIBUTE.Equals("A")) {
+                defender_shield_A = shield;
+            }
+        }
         StartCoroutine(GameLoop());
     }
 
@@ -153,7 +173,7 @@ public class GameManager : MonoBehaviour {
             change_isSelectable(defender_hand, 0);
             // yield return new WaitUntil(): ()内の再開条件で指定した関数がtrueを返すまで処理を中断する(() => ...は、引数無しのラムダ式)
             yield return new WaitUntil(() => Variables.player_tapped_obj != null);
-            Debug.Log("correctly selected.");
+            Debug.Log("selected correctly.");
         } else if (tmp_attacker_name.Equals("Enemy")) {
             Utility.GetSafeComponent<HandSet>(attacker_hand).random_summon();
             Debug.Log("Enemy has selected SP or EV card.");
@@ -186,7 +206,7 @@ public class GameManager : MonoBehaviour {
             change_isSelectable(defender_hand, 0);
             // yield return new WaitUntil(): ()内の再開条件で指定した関数がtrueを返すまで処理を中断する(() => ...は、引数無しのラムダ式)
             yield return new WaitUntil(() => Variables.player_tapped_obj != null);
-            Debug.Log("correctly selected.");
+            Debug.Log("selected correctly.");
         } else if (tmp_attacker_name.Equals("Enemy")) {
             Utility.GetSafeComponent<HandSet>(attacker_hand).random_summon();
             Debug.Log("Enemy has selected ATK card.");
@@ -220,7 +240,7 @@ public class GameManager : MonoBehaviour {
             change_isSelectable(attacker_hand, 0);
             // yield return new WaitUntil(): ()内の再開条件で指定した関数がtrueを返すまで処理を中断する(() => ...は、引数無しのラムダ式)
             yield return new WaitUntil(() => Variables.player_tapped_obj != null);
-            Debug.Log("correctly selected.");
+            Debug.Log("selected correctly.");
         } else if (tmp_attacker_name.Equals("Player")) { // 敵が防御側のとき
             Utility.GetSafeComponent<HandSet>(defender_hand).random_summon();
             Debug.Log("Enemy has selected DEF card.");
@@ -234,27 +254,41 @@ public class GameManager : MonoBehaviour {
     private IEnumerator RoundCalcDamage() {
         Debug.Log("Now is RoundCalcDamage.");
 
-        // 攻撃側なら攻撃したとき、防御側なら攻撃されたときのダメージを計算する
-        // 防御側の防御カードの属性＝攻撃側のカードの属性なら、防御クリティカル発生
-        // ダメージ＝攻撃力―防御力＊防御力ダウン率＊クリティカル防御率
+        // フィールドに出ているカードの情報を保存
+        field_atk_card = Utility.GetSafeComponent<Card>(attacker_field.transform.GetChild(0).gameObject);
+        field_def_card = Utility.GetSafeComponent<Card>(defender_field.transform.GetChild(0).gameObject);
+        field_atk_power = field_atk_card.POWER;
+        field_def_power = field_def_card.POWER;
+        field_atk_attr = field_atk_card.ATTRIBUTE;
+        field_def_attr = field_atk_card.ATTRIBUTE;
 
-        /*
-
-        int atk_power = 0, def_power = 0;
-        string field_atk_attr = "", field_def_attr;
-        atk_power = Utility.GetSafeComponent<Card>(attacker_field.transform.GetChild(0).gameObject).POWER;
-        def_power = Utility.GetSafeComponent<Card>(defender_field.transform.GetChild(0).gameObject).POWER;
-        field_atk_attr = Utility.GetSafeComponent<Card>(attacker_field.transform.GetChild(0).gameObject).ATTRIBUTE;
-        field_def_attr = Utility.GetSafeComponent<Card>(defender_field.transform.GetChild(0).gameObject).ATTRIBUTE;
-        // 防御側のフィールドに出ているカードの属性=攻撃側のフィールドに出ているカードならば、防御クリティカル発生
+        // 防御側の防御カードの属性=攻撃側の攻撃カードの属性ならば、防御クリティカル発生
         if (field_def_attr.Equals(field_atk_attr)) {
-            Variables.def_critical = 0.5f;
+            Variables.def_critical = 0.5f; // 防御クリティカルにより、ダメージ半減
+        } else {
+            Variables.def_critical = 1.0f;
         }
 
-        */
+        // 実際のダメージ計算。ダメージ = 攻撃力 - 防御力 * 防御力ダウン率 * クリティカル防御率
+        // ※イベントカードで防御が下がっている時、その倍率は1属性のみの場合30％、3属性全体の場合10％
+        // ※Card.csの特殊・イベントカードの処理内で防御ダウン率を更新してもらえるとありがたいです(Variables.defdown_C = 0.7f;みたいな感じで)
 
-        // 実際のダメージ計算。プレイヤーと敵が持つ3属性の攻撃力・防御力はどこで保持する・・・？
-        // Variables.damage = atk_power - (int)(def_power * Variables.def_down * Variables.def_critical);
+        if (field_atk_attr.Equals("Confidentiality")) { // 機密性の攻撃のとき
+            Variables.damage = field_atk_power - (int)(field_def_power * Variables.defdown_C * Variables.def_critical);
+            Utility.GetSafeComponent<Shield>(defender_shield_C).HP -= Variables.damage;
+        } else if (field_atk_attr.Equals("Integrity")) { // 完全性の攻撃のとき
+            Variables.damage = field_atk_power - (int)(field_def_power * Variables.defdown_I * Variables.def_critical);
+            Utility.GetSafeComponent<Shield>(defender_shield_I).HP -= Variables.damage;
+        } else if (field_atk_attr.Equals("Availability")) { // 可用性の攻撃のとき
+            Variables.damage = field_atk_power - (int)(field_def_power * Variables.defdown_A * Variables.def_critical);
+            Utility.GetSafeComponent<Shield>(defender_shield_A).HP -= Variables.damage;
+        } else if (field_atk_attr.Equals("Overall")) { // 全体的な攻撃のとき
+            Variables.damage = field_atk_power - (int)(field_def_power * Variables.defdown_O * Variables.def_critical);
+            Utility.GetSafeComponent<Shield>(defender_shield_C).HP -= Variables.damage;
+            Utility.GetSafeComponent<Shield>(defender_shield_I).HP -= Variables.damage;
+            Utility.GetSafeComponent<Shield>(defender_shield_A).HP -= Variables.damage;
+        }
+
         yield return null;
     }
 
@@ -276,7 +310,12 @@ public class GameManager : MonoBehaviour {
             GameObject defender_field_child = defender_field.transform.GetChild(0).gameObject;
             defender_field_child.transform.parent = defender_tomb.transform;
         }
-        // イベントエリア内のカード移動は、HandSet.csのメソッドevent_summonの実装ができてから。
+        // ※イベントエリア内のカード移動は、HandSet.csのメソッドevent_summonの実装ができてから。
+        // 防御ダウン率のリセット(イベントカードの持続時間が1ターンの場合しか対応できないので、ターンカウンタとか用意して対応させようかと思います)
+        Variables.defdown_C = 1.0f;
+        Variables.defdown_I = 1.0f;
+        Variables.defdown_A = 1.0f;
+        Variables.defdown_O = 1.0f;
 
         yield return null;
     }
@@ -295,6 +334,16 @@ public class GameManager : MonoBehaviour {
         defender_hand = players[tm.getNextTurn()].transform.Find("Cards/Hand").gameObject;
         defender_field = players[tm.getNextTurn()].transform.Find("Cards/Field").gameObject;
         defender_tomb = players[tm.getNextTurn()].transform.Find("Cards/Tomb").gameObject;
+        defender_shields = Utility.GetSafeComponent<ShieldManager>(transform.Find(tmp_attacker_name + "/Shields").gameObject).SHIELDS;
+        foreach (GameObject shield in defender_shields) {
+            if (Utility.GetSafeComponent<Shield>(shield).ATTRIBUTE.Equals("C")) {
+                defender_shield_C = shield;
+            } else if (Utility.GetSafeComponent<Shield>(shield).ATTRIBUTE.Equals("I")) {
+                defender_shield_I = shield;
+            } else if (Utility.GetSafeComponent<Shield>(shield).ATTRIBUTE.Equals("A")) {
+                defender_shield_A = shield;
+            }
+        }
         yield return null;
     }
 
@@ -434,10 +483,43 @@ public class GameManager : MonoBehaviour {
 
     // 1試合が終わったかどうかを判定する
     bool isFinished() {
-        /* if (3枚のシールドの総HPが0になったら || 攻撃側と防御側の双方に、出せる攻撃カードが無くなったら？) {
-         *     return true;
-         * }
-         */
-        return false;
+        // プレイヤーと敵のシールドの総HPを計算
+        GameObject[] player_shields = Utility.GetSafeComponent<ShieldManager>(transform.Find("Player/Shields").gameObject).SHIELDS;
+        GameObject[] enemy_shields = Utility.GetSafeComponent<ShieldManager>(transform.Find("Enemy/Shields").gameObject).SHIELDS;
+        int player_hp_total = 0, enemy_hp_total = 0;
+        foreach (GameObject player_shield in player_shields) {
+            player_hp_total += Utility.GetSafeComponent<Shield>(player_shield).HP;
+        }
+        foreach (GameObject enemy_shield in enemy_shields) {
+            enemy_hp_total += Utility.GetSafeComponent<Shield>(enemy_shield).HP;
+        }
+
+        // プレイヤーと敵それぞれが攻撃カードを持っているかどうかを確認
+        bool player_hasATK = false, enemy_hasATK = false;
+        foreach (Transform hand_child in attacker_hand.transform) {
+            Card hand_child_card = Utility.GetSafeComponent<Card>(hand_child.gameObject);
+            if (hand_child_card.TYPE.Equals("ATK")) {
+                if (tmp_attacker_name.Equals("Player")) {
+                    player_hasATK = true;
+                } else if (tmp_attacker_name.Equals("Enemy")) {
+                    enemy_hasATK = true;
+                }
+                break;
+            }
+        }
+        foreach (Transform hand_child in defender_hand.transform) {
+            Card hand_child_card = Utility.GetSafeComponent<Card>(hand_child.gameObject);
+            if (hand_child_card.TYPE.Equals("ATK")) {
+                if (tmp_attacker_name.Equals("Player")) {
+                    enemy_hasATK = true;
+                } else if (tmp_attacker_name.Equals("Enemy")) {
+                    player_hasATK = true;
+                }
+                break;
+            }
+        }
+
+        // // 3枚のシールドの総HPが0になったら or 攻撃側と防御側の双方に、出せる攻撃カードが無くなったら、ゲーム終了判定
+        return (player_hp_total == 0 || enemy_hp_total == 0) || (!player_hasATK && !enemy_hasATK);
     }
 }
