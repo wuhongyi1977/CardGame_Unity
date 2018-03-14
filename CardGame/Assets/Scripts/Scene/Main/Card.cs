@@ -162,31 +162,31 @@ public class Card : MonoBehaviour {
         int count;
         GameObject[] children;
         GameObject eneHand;
+        string Player_name;
 
         eneHand = transform.Find("Enemy/Hand").gameObject;
         count = eneHand.transform.childCount;
         children = new GameObject[count];
-        
-        if (count % 2 == 0)
-        {  //偶数の時の挙動
-            for (int i = 0; count > i; i++)
-            {
-                children[i] = eneHand.transform.GetChild(i).gameObject;
-                double x = -0.8 - 1.6 * (count / 2 - 1) + 1.6 * i;
-                children[i].transform.localPosition = new Vector3((float)x, 5, 0);
-                children[i].GetComponent<Card>().ISBACK = false;  
-                children[i].GetComponent<Card>().ISSELECTABLE = true;  
+        Player_name = transform.parent.name;
 
-            }
-        } else{  //奇数
+        if (Player_name == "Player"){
+            if (count % 2 == 0){  //偶数の時の挙動
+                for (int i = 0; count > i; i++){
+                    children[i] = eneHand.transform.GetChild(i).gameObject;
+                    double x = -0.8 - 1.6 * (count / 2 - 1) + 1.6 * i;
+                    children[i].transform.localPosition = new Vector3((float)x, 5, 0);
+                    children[i].GetComponent<Card>().ISBACK = false;
+                    children[i].GetComponent<Card>().ISSELECTABLE = true;
 
-            for (int i = 0; count > i; i++)
-            {
-                children[i] = eneHand.transform.GetChild(i).gameObject;
-                double x = -1.6 * ((count - 1) / 2) + 1.6 * i;
-                children[i].transform.localPosition = new Vector3((float)x, 5, 0);
-                children[i].GetComponent<Card>().ISBACK = false;  
-                children[i].GetComponent<Card>().ISSELECTABLE = true;  
+                }
+            }else{  //奇数
+                for (int i = 0; count > i; i++){
+                    children[i] = eneHand.transform.GetChild(i).gameObject;
+                    double x = -1.6 * ((count - 1) / 2) + 1.6 * i;
+                    children[i].transform.localPosition = new Vector3((float)x, 5, 0);
+                    children[i].GetComponent<Card>().ISBACK = false;
+                    children[i].GetComponent<Card>().ISSELECTABLE = true;
+                }
             }
         }
 
@@ -196,11 +196,11 @@ public class Card : MonoBehaviour {
     //追加部分(イベントカード)
     public void eventCard(){
         if (card_id == 17){
-
+            Variables.defdown_I = 0.7f;
         }else if (card_id == 18){
-
+            Variables.defdown_A = 0.7f;
         }else if (card_id == 19){
-
+            Variables.defdown_C = 0.7f;
         }
     }
 
