@@ -155,9 +155,9 @@ public class GameManager : MonoBehaviour {
 
         // 攻撃側の手札で、特殊カードとイベントカードを選べるようにし、それ以外を選べないようにする
         change_isSelectable(attacker_hand, 1);
-
         // 攻撃側が手札から特殊カードorイベントカードを出せるかどうかのチェック
         check_canSummon(attacker_hand, 1);
+        Debug.Log(Variables.attacker_canSummon);
 
         // 攻撃側がここでスキップしたらこのコルーチンを停止する
         if (Variables.attacker_hasSkipped) {
@@ -175,6 +175,10 @@ public class GameManager : MonoBehaviour {
             yield return new WaitUntil(() => Variables.player_tapped_obj != null);
             Debug.Log("selected correctly.");
         } else if (tmp_attacker_name.Equals("Enemy")) {
+            if (!Variables.attacker_canSummon) {
+                // 敵が攻撃側の時にイベントカードor特殊カードを出せない場合、コルーチン終了
+                yield break;
+            }
             Utility.GetSafeComponent<HandSet>(attacker_hand).random_summon();
             Debug.Log("Enemy has selected SP or EV card.");
             yield return new WaitForSeconds(1.0f); // 1秒待つ
@@ -208,6 +212,10 @@ public class GameManager : MonoBehaviour {
             yield return new WaitUntil(() => Variables.player_tapped_obj != null);
             Debug.Log("selected correctly.");
         } else if (tmp_attacker_name.Equals("Enemy")) {
+            if (!Variables.attacker_canSummon) {
+                // 敵が攻撃側の時に攻撃カードを出せない場合、コルーチン終了
+                yield break;
+            }
             Utility.GetSafeComponent<HandSet>(attacker_hand).random_summon();
             Debug.Log("Enemy has selected ATK card.");
             yield return new WaitForSeconds(1.0f); // 1秒待つ
@@ -242,6 +250,10 @@ public class GameManager : MonoBehaviour {
             yield return new WaitUntil(() => Variables.player_tapped_obj != null);
             Debug.Log("selected correctly.");
         } else if (tmp_attacker_name.Equals("Player")) { // 敵が防御側のとき
+            if (!Variables.defender_canSummon) {
+                // 敵が防御側の時に防御カードを出せない場合、コルーチン終了
+                yield break;
+            }
             Utility.GetSafeComponent<HandSet>(defender_hand).random_summon();
             Debug.Log("Enemy has selected DEF card.");
             yield return new WaitForSeconds(1.0f); // 1秒待つ
@@ -254,19 +266,24 @@ public class GameManager : MonoBehaviour {
     private IEnumerator RoundCalcDamage() {
         Debug.Log("Now is RoundCalcDamage.");
 
-        // フィールドに出ているカードの情報を保存
-        field_atk_card = Utility.GetSafeComponent<Card>(attacker_field.transform.GetChild(0).gameObject);
-        field_def_card = Utility.GetSafeComponent<Card>(defender_field.transform.GetChild(0).gameObject);
-        field_atk_power = field_atk_card.POWER;
-        field_def_power = field_def_card.POWER;
-        field_atk_attr = field_atk_card.ATTRIBUTE;
-        field_def_attr = field_atk_card.ATTRIBUTE;
+        if (!Variables.defender_canSummon) {
+            // フィールドに出ているカードの情報を保存
+            field_atk_card = Utility.GetSafeComponent<Card>(attacker_field.transform.GetChild(0).gameObject);
+            field_def_card = Utility.GetSafeComponent<Card>(defender_field.transform.GetChild(0).gameObject);
+            field_atk_power = field_atk_card.POWER;
+            field_def_power = field_def_card.POWER;
+            field_atk_attr = field_atk_card.ATTRIBUTE;
+            field_def_attr = field_atk_card.ATTRIBUTE;
 
-        // 防御側の防御カードの属性=攻撃側の攻撃カードの属性ならば、防御クリティカル発生
-        if (field_def_attr.Equals(field_atk_attr)) {
-            Variables.def_critical = 0.5f; // 防御クリティカルにより、ダメージ半減
+            // 防御側の防御カードの属性=攻撃側の攻撃カードの属性ならば、防御クリティカル発生
+            if (field_def_attr.Equals(field_atk_attr)) {
+                Variables.def_critical = 0.5f; // 防御クリティカルにより、ダメージ半減
+            } else {
+                Variables.def_critical = 1.0f;
+            }
         } else {
-            Variables.def_critical = 1.0f;
+            // 防御側が防御カードを出していなければ防御パワーは無い
+            field_def_power = 0;
         }
 
         // 実際のダメージ計算。ダメージ = 攻撃力 - 防御力 * 防御力ダウン率 * クリティカル防御率
@@ -400,6 +417,8 @@ public class GameManager : MonoBehaviour {
                     if (hand_child_card.TYPE.Equals("EV") || hand_child_card.TYPE.Equals("SP")) {
                         Variables.attacker_canSummon = true;
                         break;
+                    } else {
+                        Variables.attacker_canSummon = false;
                     }
                 }
                 break;
@@ -408,6 +427,9 @@ public class GameManager : MonoBehaviour {
                     Card hand_child_card = Utility.GetSafeComponent<Card>(hand_child.gameObject);
                     if (hand_child_card.TYPE.Equals("ATK")) {
                         Variables.attacker_canSummon = true;
+                        break;
+                    } else {
+                        Variables.attacker_canSummon = false;
                     }
                 }
                 break;
@@ -416,6 +438,9 @@ public class GameManager : MonoBehaviour {
                     Card hand_child_card = Utility.GetSafeComponent<Card>(hand_child.gameObject);
                     if (hand_child_card.TYPE.Equals("DEF")) {
                         Variables.defender_canSummon = true;
+                        break;
+                    } else {
+                        Variables.defender_canSummon = false;
                     }
                 }
                 break;
