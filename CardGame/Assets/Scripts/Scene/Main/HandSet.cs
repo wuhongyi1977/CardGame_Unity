@@ -61,7 +61,6 @@ public class HandSet : MonoBehaviour {
                     children[i].transform.localPosition = new Vector3((float)x, 5, 0);
                 }
                 children[i].GetComponent<Card>().ISBACK = false;  //とりあえず表に
-                children[i].GetComponent<Card>().ISSELECTABLE = true;  //とりあえず選択可に(暫定なので後々消してゲームマネージャーでちゃんと管理してください)
 
             }
         } else {  //奇数
@@ -74,7 +73,6 @@ public class HandSet : MonoBehaviour {
                     children[i].transform.localPosition = new Vector3((float)x, 5, 0);
                 }
                 children[i].GetComponent<Card>().ISBACK = false;  //とりあえず表に
-                children[i].GetComponent<Card>().ISSELECTABLE = true;  //とりあえず選択可に(暫定なので後々消してゲームマネージャーでちゃんと管理してください)
             }
         }
     }
